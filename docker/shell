@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+docker start mmpg_engine_test
+docker exec -it mmpg_engine_test bash --login
+docker kill mmpg_engine_test
