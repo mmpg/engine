@@ -14,7 +14,10 @@ include_directories(
 )
 
 # Executables
-set(SOURCE_FILES src/main.cpp)
+set(SOURCE_FILES
+        src/server.cpp
+        src/main.cpp
+)
 add_executable(engine ${SOURCE_FILES})
 
 target_link_libraries(engine
