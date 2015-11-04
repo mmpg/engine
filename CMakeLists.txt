@@ -15,6 +15,7 @@ include_directories(
 
 # Executables
 set(SOURCE_FILES
+        src/notifier.cpp
         src/server.cpp
         src/main.cpp
 )

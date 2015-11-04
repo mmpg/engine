@@ -8,7 +8,7 @@ Server::Server(zmq::context_t &context, std::string port) : socket_(context, ZMQ
   std::cout << "[SERVER] Listening to 0.0.0.0:" << port << std::endl;
 }
 
-void Server::run() {
+void Server::Run(Notifier &notifier) {
   while(true) {
     zmq::message_t request;
 
@@ -20,6 +20,8 @@ void Server::run() {
     zmq::message_t reply(8);
     memcpy((void*) reply.data(), "It works", 8);
     socket_.send(reply);
+
+    notifier.Notify("Yoo");
   }
 }
 }
