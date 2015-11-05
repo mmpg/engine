@@ -2,7 +2,7 @@
 #include "server.hpp"
 #include "notifier.hpp"
 
-int main ()  {
+int main() {
   zmq::context_t context(1);
 
   mmpg::Server server(context, "5555");

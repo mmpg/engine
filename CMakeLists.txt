@@ -17,10 +17,10 @@ include_directories(
 set(SOURCE_FILES
         src/notifier.cpp
         src/server.cpp
-        src/main.cpp
+        src/utils.cpp
 )
-add_executable(engine ${SOURCE_FILES})
+add_executable(master src/master.cpp ${SOURCE_FILES})
 
-target_link_libraries(engine
+target_link_libraries(master
         ${ZEROMQ_LIBRARIES}
 )
