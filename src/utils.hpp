@@ -12,5 +12,8 @@
 #define myerr(...) myerror_at_line(EXIT_FAILURE, errno, __FILE__, __LINE__, __VA_ARGS__)
 
 namespace mmpg {
-void mkdir(std::string path, __mode_t mode);
+namespace utils {
+void Mkdir(std::string path, __mode_t mode);
+bool System(std::string cmd);
+}
 }

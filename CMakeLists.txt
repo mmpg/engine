@@ -13,14 +13,27 @@ include_directories(
         lib/cppzmq
 )
 
-# Executables
+# Common source files
 set(SOURCE_FILES
+        src/utils.cpp
+        src/debug.cpp
+)
+
+# Master
+add_executable(master
+        src/master.cpp
         src/notifier.cpp
         src/server.cpp
-        src/utils.cpp
+        ${SOURCE_FILES}
 )
-add_executable(master src/master.cpp ${SOURCE_FILES})
 
 target_link_libraries(master
         ${ZEROMQ_LIBRARIES}
+)
+
+# Players
+add_executable(player
+        src/player.cpp
+        match/build/ai.cpp
+        ${SOURCE_FILES}
 )
