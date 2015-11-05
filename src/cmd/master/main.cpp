@@ -31,11 +31,7 @@ int main() {
 
     player->build();
 
-    if(player->is_built()) {
-      debug::Println(" ok");
-    } else {
-      debug::Println(" failed");
-    }
+    debug::Println(player->is_built() ? " ok" : " failed");
 
     players.push_back(player);
   }
@@ -48,8 +44,10 @@ int main() {
   for(Player* player : players) {
     if(player->is_built()) {
       debug::Print("    " + player->email() + "...");
+
       player->start();
-      debug::Println(" ok");
+
+      debug::Println(player->is_started() ? " ok" : " failed");
     }
   }
 

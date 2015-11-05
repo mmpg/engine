@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include <vector>
 #include <sys/stat.h>
 
 /**
@@ -15,7 +16,15 @@ namespace mmpg {
 namespace utils {
 
 void Mkdir(std::string path, __mode_t mode);
+void Mkfifo(std::string path);
+void Unlink(std::string path);
+void Chdir(std::string path);
+void Exec(std::string path, std::vector<std::string> args);
+
+bool FileExists(std::string path);
 bool System(std::string cmd);
+
+pid_t Fork();
 
 }
 }
