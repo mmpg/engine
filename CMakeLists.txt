@@ -21,9 +21,10 @@ set(SOURCE_FILES
 
 # Master
 add_executable(master
-        src/master.cpp
-        src/notifier.cpp
-        src/server.cpp
+        src/cmd/master/main.cpp
+        src/cmd/master/player.cpp
+        src/cmd/master/notifier.cpp
+        src/cmd/master/server.cpp
         ${SOURCE_FILES}
 )
 
@@ -33,7 +34,7 @@ target_link_libraries(master
 
 # Players
 add_executable(player
-        src/player.cpp
+        src/cmd/player/main.cpp
         match/build/ai.cpp
         ${SOURCE_FILES}
 )

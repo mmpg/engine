@@ -1,7 +1,9 @@
 #include <iostream>
 #include <fstream>
-#include "utils.hpp"
-#include "debug.hpp"
+#include <vector>
+#include "../../utils.hpp"
+#include "../../debug.hpp"
+#include "player.hpp"
 
 using namespace mmpg;
 
@@ -12,22 +14,32 @@ int main() {
   // Create folder for building players
   utils::Mkdir("match/build", 0777);
 
+  // Read players
   std::ifstream input("match/players.txt");
   std::string email;
 
+  // Compile players
   debug::Println("Compiling players:");
 
+  std::vector<Player*> players;
+
   while(std::getline(input, email)) {
-    utils::Mkdir("match/players/" + email, 0777);
+    Player* player = new Player(email);
 
-    debug::Print("  " + email + "...");
+    debug::Print("    " + email + "...");
 
-    if(utils::System("./bin/build_player " + email)) {
+    player->build();
+
+    if(player->is_built()) {
       debug::Println(" ok");
     } else {
       debug::Println(" failed");
     }
   }
+
+  // Start players
+  debug::Println("Starting players:");
+
 
   return 0;
 }

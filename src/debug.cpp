@@ -2,13 +2,15 @@
 
 namespace mmpg {
 namespace debug {
+
 void Print(std::string msg) {
   std::cerr << msg;
+  std::cerr.flush();
 }
 
 void Println(std::string msg) {
-  Print(msg);
-  std::cerr << std::endl;
+  std::cerr << msg << std::endl;
 }
+
 }
 }
