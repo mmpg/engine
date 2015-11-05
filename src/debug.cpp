@@ -8,6 +8,10 @@ void Print(std::string msg) {
   std::cerr.flush();
 }
 
+void Println() {
+  std::cerr << std::endl;
+}
+
 void Println(std::string msg) {
   std::cerr << msg << std::endl;
 }

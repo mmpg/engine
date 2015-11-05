@@ -18,6 +18,7 @@ int main() {
   std::ifstream input("match/players.txt");
   std::string email;
 
+  // TODO: Abstract this in a worker class
   // Compile players
   debug::Println("Compiling players:");
 
@@ -35,11 +36,22 @@ int main() {
     } else {
       debug::Println(" failed");
     }
+
+    players.push_back(player);
   }
+
+  debug::Println();
 
   // Start players
   debug::Println("Starting players:");
 
+  for(Player* player : players) {
+    if(player->is_built()) {
+      debug::Print("    " + player->email() + "...");
+      player->start();
+      debug::Println(" ok");
+    }
+  }
 
   return 0;
 }

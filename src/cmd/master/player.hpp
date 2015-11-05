@@ -9,7 +9,9 @@ class Player {
   Player(std::string email);
 
   void build();
+  void start();
 
+  const std::string& email() const;
   bool is_built();
 
  private:
