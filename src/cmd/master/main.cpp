@@ -47,7 +47,7 @@ int main() {
 
       player->start();
 
-      debug::Println(player->is_started() ? " ok" : " failed");
+      debug::Println(player->is_alive() ? " ok" : " failed");
     }
   }
 
