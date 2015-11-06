@@ -24,6 +24,10 @@ void Exec(std::string path, std::vector<std::string> args);
 bool FileExists(std::string path);
 bool System(std::string cmd);
 
+int Open(std::string path, int mode);
+int OpenForRead(std::string path);
+int OpenForWrite(std::string path);
+
 pid_t Fork();
 
 }

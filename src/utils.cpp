@@ -74,6 +74,24 @@ bool System(std::string cmd) {
   return ::system(cmd.c_str()) == 0;
 }
 
+int Open(std::string path, int mode) {
+  int fd = open(path.c_str(), mode);
+
+  if(fd < 0) {
+    myerr("error at open");
+  }
+
+  return fd;
+}
+
+int OpenForRead(std::string path) {
+  return Open(path, O_RDONLY);
+}
+
+int OpenForWrite(std::string path) {
+  return Open(path, O_WRONLY);
+}
+
 pid_t Fork() {
   pid_t pid = fork();
 

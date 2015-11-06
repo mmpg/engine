@@ -3,7 +3,7 @@
 
 namespace mmpg {
 
-Player::Player(std::string email) : email_(email), is_built_(false), pid_(-1), send_(0), read_(0) {
+Player::Player(std::string email) : email_(email), is_built_(false), pid_(-1), write_(0), read_(0) {
 
 }
 
@@ -24,7 +24,7 @@ void Player::start() {
     utils::Chdir(path());
     utils::Exec("player", {"player"});
   } else {
-    send_ = new std::ofstream(path() + "/input");
+    write_ = new std::ofstream(path() + "/input");
     read_ = new std::ifstream(path() + "/output");
   }
 }
@@ -42,11 +42,15 @@ bool Player::is_built() const {
 }
 
 bool Player::is_alive() const {
-  return pid_ != 0;
-}
+  *write_ << "PING" << std::endl;
 
-pid_t Player::pid() const {
-  return pid_;
+  std::string reply;
+
+  if(!std::getline(*read_, reply)) {
+    return false;
+  }
+
+  return reply == "PONG";
 }
 
 void Player::create_pipe(std::string name) const {
@@ -60,12 +64,12 @@ void Player::create_pipe(std::string name) const {
 }
 
 Player::~Player() {
-  if(send_) {
-    delete send_;
-  }
-
   if(read_) {
     delete read_;
+  }
+
+  if(write_) {
+    delete write_;
   }
 }
 }
