@@ -65,10 +65,12 @@ void Player::create_pipe(std::string name) const {
 
 Player::~Player() {
   if(read_) {
+    read_->close();
     delete read_;
   }
 
   if(write_) {
+    write_->close();
     delete write_;
   }
 }
