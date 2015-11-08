@@ -2,6 +2,8 @@
 #include <fcntl.h>
 #include <unistd.h>
 #include <string.h>
+#include <uuid/uuid.h>
+#include <sys/wait.h>
 
 namespace mmpg {
 namespace utils {
@@ -66,6 +68,10 @@ void Exec(std::string path, std::vector<std::string> args) {
   myerr("error at execv"); // We should not reach this code
 }
 
+void Sleep(unsigned int ms) {
+  usleep(ms * 1000);
+}
+
 bool FileExists(std::string path) {
   return access(path.c_str(), F_OK) != -1;
 }
@@ -100,6 +106,21 @@ pid_t Fork() {
   }
 
   return pid;
+}
+
+bool IsAlive(pid_t pid) {
+  int status;
+  return waitpid(pid, &status, WNOHANG) == 0;
+}
+
+std::string uuid() {
+  uuid_t t;
+  uuid_generate(t);
+
+  char uuid[100];
+  uuid_unparse(t, uuid);
+
+  return std::string(uuid);
 }
 
 }

@@ -1,6 +1,7 @@
 #include <iostream>
 #include <fstream>
-#include <vector>
+#include <map>
+#include <unistd.h>
 #include "../../utils.hpp"
 #include "../../debug.hpp"
 #include "player.hpp"
@@ -22,7 +23,7 @@ int main() {
   // Compile players
   debug::Println("Compiling players:");
 
-  std::vector<Player*> players;
+  std::map<std::string, Player*> players;
 
   while(std::getline(input, email)) {
     Player* player = new Player(email);
@@ -33,7 +34,7 @@ int main() {
 
     debug::Println(player->is_built() ? " ok" : " failed");
 
-    players.push_back(player);
+    players[player->key()] = player;
   }
 
   debug::Println();
@@ -41,7 +42,9 @@ int main() {
   // Start players
   debug::Println("Starting players:");
 
-  for(Player* player : players) {
+  for(auto& kv : players) {
+    Player* player = kv.second;
+
     if(player->is_built()) {
       debug::Print("    " + player->email() + "...");
 
@@ -51,7 +54,7 @@ int main() {
     }
   }
 
-  // TODO: Start match
+  // TODO: Start game world server
 
   return 0;
 }

@@ -20,6 +20,7 @@ void Mkfifo(std::string path);
 void Unlink(std::string path);
 void Chdir(std::string path);
 void Exec(std::string path, std::vector<std::string> args);
+void Sleep(unsigned int ms);
 
 bool FileExists(std::string path);
 bool System(std::string cmd);
@@ -29,6 +30,9 @@ int OpenForRead(std::string path);
 int OpenForWrite(std::string path);
 
 pid_t Fork();
+bool IsAlive(pid_t pid);
+
+std::string uuid();
 
 }
 }

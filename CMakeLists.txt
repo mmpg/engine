@@ -30,6 +30,7 @@ add_executable(master
 
 target_link_libraries(master
         ${ZEROMQ_LIBRARIES}
+        uuid
 )
 
 # Players
@@ -37,4 +38,8 @@ add_executable(player
         src/cmd/player/main.cpp
         match/build/ai.cpp
         ${SOURCE_FILES}
+)
+
+target_link_libraries(player
+        uuid
 )

@@ -3,7 +3,11 @@
 
 namespace mmpg {
 
-Player::Player(std::string email) : email_(email), is_built_(false), pid_(-1), write_(0), read_(0) {
+Player::Player(std::string email) : key_(utils::uuid()), email_(email), is_built_(false), pid_(-1) {
+
+}
+
+Player::~Player() {
 
 }
 
@@ -15,18 +19,16 @@ void Player::build() {
 }
 
 void Player::start() {
-  create_pipe("input");
-  create_pipe("output");
-
   pid_ = utils::Fork();
 
   if(pid_ == 0) {
     utils::Chdir(path());
-    utils::Exec("player", {"player"});
-  } else {
-    write_ = new std::ofstream(path() + "/input");
-    read_ = new std::ifstream(path() + "/output");
+    utils::Exec("player", {"player", key_});
   }
+}
+
+const std::string& Player::key() const {
+  return key_;
 }
 
 const std::string& Player::email() const {
@@ -42,36 +44,7 @@ bool Player::is_built() const {
 }
 
 bool Player::is_alive() const {
-  *write_ << "PING" << std::endl;
-
-  std::string reply;
-
-  if(!std::getline(*read_, reply)) {
-    return false;
-  }
-
-  return reply == "PONG";
+  return utils::IsAlive(pid_);
 }
 
-void Player::create_pipe(std::string name) const {
-  std::string filename = path() + "/" + name;
-
-  if(utils::FileExists(filename)) {
-    utils::Unlink(filename);
-  }
-
-  utils::Mkfifo(filename);
-}
-
-Player::~Player() {
-  if(read_) {
-    read_->close();
-    delete read_;
-  }
-
-  if(write_) {
-    write_->close();
-    delete write_;
-  }
-}
 }
