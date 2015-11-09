@@ -7,7 +7,7 @@ class World {
   World();
   World(std::istringstream stream);
 
-  void Update(std::string player, std::istringstream& action);
+  void Update(int player, std::istringstream& action);
   void Print(std::ostringstream& stream);
 };
 

@@ -26,13 +26,17 @@ void Worker::Run() {
 }
 
 
-bool Worker::has_player(std::string id) const {
-  return players_.find(id) != players_.end();
+bool Worker::has_player_with_key(const std::string& key) const {
+  return key_player_.find(key) != key_player_.end();
 }
 
 
-bool Worker::has_player_with_email(std::string email) const {
+bool Worker::has_player_with_email(const std::string& email) const {
   return email_player_.find(email) != email_player_.end();
+}
+
+unsigned int Worker::player_id(const std::string& key) const {
+  return key_player_.find(key)->second->id();
 }
 
 void Worker::create_directories() {
@@ -46,21 +50,22 @@ void Worker::create_directories() {
 void Worker::read_players() {
   // Read players
   std::ifstream input("match/players.txt");
+
+  unsigned int id;
   std::string email;
 
-  // Compile players
-  debug::Println("WORKER", "Compiling players:");
+  while(input >> id >> email) {
+    Player* player = new Player(id, email);
 
-  while(std::getline(input, email)) {
-    Player* player = new Player(email);
-
-    players_[player->id()] = player;
+    key_player_[player->key()] = player;
     email_player_[player->email()] = player;
   }
 }
 
 void Worker::compile_players() {
-  for(auto& kv : email_player_) {
+  debug::Println("WORKER", "Compiling players:");
+
+  for(auto& kv : key_player_) {
     Player* player = kv.second;
 
     debug::Print("WORKER", "    " + player->email() + "...");
@@ -74,7 +79,7 @@ void Worker::compile_players() {
 void Worker::run_players() {
   debug::Println("WORKER", "Running players:");
 
-  for(auto& kv : email_player_) {
+  for(auto& kv : key_player_) {
     Player* player = kv.second;
 
     if(player->is_built()) {
@@ -86,5 +91,4 @@ void Worker::run_players() {
     }
   }
 }
-
 }

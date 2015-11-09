@@ -29,16 +29,16 @@ int main() {
     std::string data(static_cast<char*>(request.data()), request.size());
     std::istringstream action(data);
 
-    // Obtain player id
-    std::string id;
-    action >> id;
+    // Obtain player key
+    std::string key;
+    action >> key;
 
-    if(worker.has_player(id)) {
+    if(worker.has_player_with_key(key)) {
       // Player exists
       debug::Println("MASTER", "    " + data);
 
       // Perform action
-      world.Update(id, action);
+      world.Update(worker.player_id(key), action);
 
       // Reply with the current game world
       std::ostringstream world_serialized;
