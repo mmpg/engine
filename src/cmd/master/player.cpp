@@ -3,7 +3,7 @@
 
 namespace mmpg {
 
-Player::Player(std::string email) : key_(utils::uuid()), email_(email), is_built_(false), pid_(-1) {
+Player::Player(std::string email) : id_(utils::uuid()), email_(email), is_built_(false), pid_(-1) {
 
 }
 
@@ -23,12 +23,12 @@ void Player::start() {
 
   if(pid_ == 0) {
     utils::Chdir(path());
-    utils::Exec("player", {"player", key_});
+    utils::Exec("player", {"player", id_});
   }
 }
 
-const std::string& Player::key() const {
-  return key_;
+const std::string& Player::id() const {
+  return id_;
 }
 
 const std::string& Player::email() const {

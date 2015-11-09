@@ -1,10 +1,14 @@
-#include "../../debug.hpp"
-#include "worker.hpp"
 #include <zmq.hpp>
+#include <sstream>
+#include "worker.hpp"
+#include "../../world.hpp"
+#include "../../debug.hpp"
+
 
 using namespace mmpg;
 
 mmpg::Worker worker;
+mmpg::World world;
 
 int main() {
   // Start game world server
@@ -21,10 +25,29 @@ int main() {
     zmq::message_t request;
     server.recv(&request);
 
-    std::string data = std::string(static_cast<char*>(request.data()), request.size());
+    // Parse request
+    std::string data(static_cast<char*>(request.data()), request.size());
+    std::istringstream action(data);
 
-    debug::Println("MASTER", "    Request received: " + data);
-    server.send("reply", 5); // TODO: Send game world status
+    // Obtain player id
+    std::string id;
+    action >> id;
+
+    if(worker.has_player(id)) {
+      // Player exists
+      debug::Println("MASTER", "    " + data);
+
+      // Perform action
+      world.Update(id, action);
+
+      // Reply with the current game world
+      std::ostringstream world_serialized;
+      world.Print(world_serialized);
+
+      server.send(world_serialized.str().c_str(), world_serialized.str().length());
+    } else {
+      server.send("400", 3);
+    }
   }
 
   return 0;

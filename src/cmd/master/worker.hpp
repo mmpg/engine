@@ -12,12 +12,12 @@ class Worker {
 
   void Run();
 
-  bool has_player_with_key(std::string key) const;
+  bool has_player(std::string id) const;
   bool has_player_with_email(std::string email) const;
 
 
  private:
-  std::map<std::string, Player*> key_player_;
+  std::map<std::string, Player*> players_;
   std::map<std::string, Player*> email_player_;
 
   void create_directories();

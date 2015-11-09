@@ -26,8 +26,8 @@ void Worker::Run() {
 }
 
 
-bool Worker::has_player_with_key(std::string key) const {
-  return key_player_.find(key) != key_player_.end();
+bool Worker::has_player(std::string id) const {
+  return players_.find(id) != players_.end();
 }
 
 
@@ -54,7 +54,7 @@ void Worker::read_players() {
   while(std::getline(input, email)) {
     Player* player = new Player(email);
 
-    key_player_[player->key()] = player;
+    players_[player->id()] = player;
     email_player_[player->email()] = player;
   }
 }
