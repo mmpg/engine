@@ -1,10 +1,11 @@
 #include "notifier.hpp"
+#include "../../debug.hpp"
 
 namespace mmpg {
-Notifier::Notifier(zmq::context_t& context, std::string port) : socket_(context, ZMQ_PUB) {
-  socket_.bind("tcp://*:" + port);
+Notifier::Notifier(zmq::context_t& context, unsigned int port) : socket_(context, ZMQ_PUB) {
+  socket_.bind("tcp://*:" + std::to_string(port));
 
-  std::cout << "[NOTIFIER] Notifying at 0.0.0.0:" << port << std::endl;
+  debug::Println("NOTIFIER", "Publishing to 0.0.0.0:" + std::to_string(port) + "...");
 }
 
 

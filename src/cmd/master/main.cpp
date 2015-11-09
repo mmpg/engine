@@ -3,6 +3,7 @@
 #include "worker.hpp"
 #include "../../world.hpp"
 #include "../../debug.hpp"
+#include "notifier.hpp"
 
 
 using namespace mmpg;
@@ -17,9 +18,14 @@ int main() {
   zmq::socket_t server(zcontext, ZMQ_REP);
   server.bind("tcp://*:5557");
 
+  // Start notifier
+  mmpg::Notifier notifier(zcontext, 5556);
+
+  // Run players
   worker.Run();
 
-  debug::Println("MASTER", "Listening to 0.0.0.0:5577");
+  // Listen for requests
+  debug::Println("MASTER", "Listening to 0.0.0.0:5557...");
 
   while(true) {
     zmq::message_t request;

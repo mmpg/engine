@@ -1,3 +1,4 @@
+#include <iomanip>
 #include "debug.hpp"
 
 namespace mmpg {
@@ -9,7 +10,9 @@ void Print(std::string msg) {
 }
 
 void Print(std::string who, std::string msg) {
-  std::cerr << '[' << who << "] " << msg;
+  std::string subject = "[" + who + "] ";
+
+  std::cerr << std::right << std::setfill(' ') << std::setw(12) << subject << msg;
   std::cerr.flush();
 }
 
@@ -18,11 +21,12 @@ void Println() {
 }
 
 void Println(std::string msg) {
-  std::cerr <<  msg << std::endl;
+  std::cerr << msg << std::endl;
 }
 
 void Println(std::string who, std::string msg) {
-  std::cerr << '[' << who << "] " << msg << std::endl;
+  Print(who, msg);
+  std::cerr << std::endl;
 }
 
 }
