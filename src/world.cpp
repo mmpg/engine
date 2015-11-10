@@ -18,4 +18,13 @@ void World::Update(int player, std::istringstream& action) {
 void World::Print(std::ostringstream& stream) {
 
 }
+
+void World::Lock() {
+  mutex_.lock();
+}
+
+void World::Unlock() {
+  mutex_.unlock();
+}
+
 }

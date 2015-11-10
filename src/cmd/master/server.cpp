@@ -1,27 +1,55 @@
 #include "server.hpp"
-#include <iostream>
+#include "../../debug.hpp"
 
 namespace mmpg {
-Server::Server(zmq::context_t &context, std::string port) : socket_(context, ZMQ_REP) {
-  socket_.bind("tcp://*:" + port);
 
-  std::cout << "[SERVER] Listening to 0.0.0.0:" << port << std::endl;
+Server::Server(zmq::context_t& context, unsigned int port) : socket_(context, ZMQ_REP) {
+  socket_.bind("tcp://*:" + std::to_string(port));
+
+  debug::Println("SERVER", "Listening to 0.0.0.0:" + std::to_string(port) + "...");
 }
 
-void Server::Run(Notifier &notifier) {
+
+void Server::Run(Worker& worker, World& world, Notifier& notifier) {
   while(true) {
     zmq::message_t request;
-
-    // Wait for next request from client
     socket_.recv(&request);
-    std::cout << "Received request" << std::endl;
 
-    // Send reply back to client
-    zmq::message_t reply(8);
-    memcpy((void*) reply.data(), "It works", 8);
-    socket_.send(reply);
+    // Parse request
+    std::string data(static_cast<char*>(request.data()), request.size());
+    std::istringstream action(data);
 
-    notifier.Notify("Yoo");
+    // Obtain player key
+    std::string key;
+    action >> key;
+
+    if(worker.has_player_with_key(key)) {
+      // Player exists
+      debug::Println("SERVER", data);
+
+      unsigned int player_id = worker.player_id(key);
+
+      // Lock the world, so no one can read while updating it
+      world.Lock();
+
+      // Perform action
+      world.Update(player_id, action);
+
+      // TODO: Notify action in JSON
+      notifier.Notify(std::to_string(player_id) + " " + data);
+
+      // Unlock the world
+      world.Unlock();
+
+      // Reply with the current game world
+      std::ostringstream world_serialized;
+      world.Print(world_serialized);
+
+      socket_.send(world_serialized.str().c_str(), world_serialized.str().length());
+    } else {
+      socket_.send("400", 3);
+    }
   }
 }
+
 }

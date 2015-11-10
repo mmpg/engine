@@ -1,60 +1,45 @@
 #include <zmq.hpp>
 #include <sstream>
+#include <thread>
 #include "worker.hpp"
 #include "../../world.hpp"
 #include "../../debug.hpp"
 #include "notifier.hpp"
+#include "api.hpp"
+#include "server.hpp"
 
 
 using namespace mmpg;
 
-mmpg::Worker worker;
-mmpg::World world;
+void run_server(Server& server, Worker& worker, World& world, Notifier& notifier) {
+  server.Run(worker, world, notifier);
+}
+
+void run_api(Api& api) {
+  api.Run();
+}
 
 int main() {
-  // Start game world server
+  // ZeroMQ context
   zmq::context_t zcontext(1);
 
-  zmq::socket_t server(zcontext, ZMQ_REP);
-  server.bind("tcp://*:5557");
+  // Components
+  Api api(zcontext, 5555);
+  Notifier notifier(zcontext, 5556);
+  Server server(zcontext, 5557);
+  Worker worker;
+  World world;
 
-  // Start notifier
-  mmpg::Notifier notifier(zcontext, 5556);
+  // Start servers
+  std::thread server_thread(run_server, std::ref(server), std::ref(worker), std::ref(world), std::ref(notifier));
+  std::thread api_thread(run_api, std::ref(api));
 
   // Run players
   worker.Run();
 
-  // Listen for requests
-  debug::Println("MASTER", "Listening to 0.0.0.0:5557...");
-
-  while(true) {
-    zmq::message_t request;
-    server.recv(&request);
-
-    // Parse request
-    std::string data(static_cast<char*>(request.data()), request.size());
-    std::istringstream action(data);
-
-    // Obtain player key
-    std::string key;
-    action >> key;
-
-    if(worker.has_player_with_key(key)) {
-      // Player exists
-      debug::Println("MASTER", "    " + data);
-
-      // Perform action
-      world.Update(worker.player_id(key), action);
-
-      // Reply with the current game world
-      std::ostringstream world_serialized;
-      world.Print(world_serialized);
-
-      server.send(world_serialized.str().c_str(), world_serialized.str().length());
-    } else {
-      server.send("400", 3);
-    }
-  }
+  // Join threads
+  server_thread.join();
+  api_thread.join();
 
   return 0;
 }

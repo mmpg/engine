@@ -23,10 +23,11 @@ set(SOURCE_FILES
 # Master
 add_executable(master
         src/cmd/master/main.cpp
+        src/cmd/master/server.cpp
         src/cmd/master/worker.cpp
         src/cmd/master/player.cpp
         src/cmd/master/notifier.cpp
-        src/cmd/master/server.cpp
+        src/cmd/master/api.cpp
         ${SOURCE_FILES}
 )
 
