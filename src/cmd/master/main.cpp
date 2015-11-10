@@ -1,5 +1,6 @@
 #include <zmq.hpp>
 #include <thread>
+#include <sstream>
 #include "worker.hpp"
 #include "../../world.hpp"
 #include "notifier.hpp"
@@ -25,7 +26,10 @@ int main() {
   Notifier notifier(zcontext, 5556);
   Server server(zcontext, 5557);
   Worker worker;
+
+  // Game world
   World world;
+  world.Read("match/world.txt");
 
   // Start servers
   std::thread api_thread(run_api, std::ref(api));
@@ -39,8 +43,8 @@ int main() {
     world.Lock();
 
     std::ostringstream stream;
-    world.Print(stream);
-    notifier.Notify(stream.str());
+    world.PrintJSON(stream);
+    notifier.Notify("SYNC " + stream.str());
 
     world.Unlock();
 

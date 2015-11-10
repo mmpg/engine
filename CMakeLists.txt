@@ -15,9 +15,11 @@ include_directories(
 
 # Common source files
 set(SOURCE_FILES
-        src/world.cpp
         src/utils.cpp
         src/debug.cpp
+        src/world.cpp
+        src/action.cpp
+        src/action/move.cpp
 )
 
 # Master

@@ -1,3 +1,4 @@
+#include <sstream>
 #include "server.hpp"
 #include "../../debug.hpp"
 
@@ -17,29 +18,34 @@ void Server::Run(Worker& worker, World& world, Notifier& notifier) {
 
     // Parse request
     std::string data(static_cast<char*>(request.data()), request.size());
-    std::istringstream action(data);
+    std::istringstream msg(data);
 
     // Obtain player key
     std::string key;
-    action >> key;
+    msg >> key;
 
     if(worker.has_player_with_key(key)) {
       // Player exists
       debug::Println("SERVER", data);
 
       unsigned int player_id = worker.player_id(key);
+      Action* action = Action::Read(msg);
 
       // Lock the world, so no one can read while updating it
       world.Lock();
 
       // Perform action
-      world.Update(player_id, action);
+      world.Update(player_id, *action);
 
-      // TODO: Notify action in JSON
-      notifier.Notify(std::to_string(player_id) + " " + data);
+      // Notify action
+      std::ostringstream action_json;
+      action->PrintJSON(action_json);
+      notifier.Notify("ACTION " + std::to_string(player_id) + " " + action_json.str());
 
       // Unlock the world
       world.Unlock();
+
+      delete action;
 
       // Reply with the current game world
       std::ostringstream world_serialized;

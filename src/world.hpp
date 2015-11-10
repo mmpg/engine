@@ -1,23 +1,31 @@
 #pragma once
 
-#include <sstream>
 #include <mutex>
+#include <vector>
+#include "action.hpp"
 
 namespace mmpg {
 
 class World {
  public:
   World();
-  World(std::istringstream stream);
 
   void Lock();
   void Unlock();
 
-  void Update(int player, std::istringstream& action);
-  void Print(std::ostringstream& stream);
+  void Read(std::string path);
+  void Read(std::istream& stream);
+  void Update(int player, const Action& action);
+  void Print(std::ostream& stream);
+  void PrintJSON(std::ostream& stream);
+
+  struct Ship {
+    int x, y;
+  };
 
  private:
   std::mutex mutex_;
+  std::vector<Ship*> ships_;
 };
 
 }
