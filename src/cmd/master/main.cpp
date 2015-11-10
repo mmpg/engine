@@ -1,22 +1,19 @@
 #include <zmq.hpp>
-#include <sstream>
 #include <thread>
 #include "worker.hpp"
 #include "../../world.hpp"
-#include "../../debug.hpp"
 #include "notifier.hpp"
 #include "api.hpp"
 #include "server.hpp"
 
-
 using namespace mmpg;
-
-void run_server(Server& server, Worker& worker, World& world, Notifier& notifier) {
-  server.Run(worker, world, notifier);
-}
 
 void run_api(Api& api) {
   api.Run();
+}
+
+void run_server(Server& server, Worker& worker, World& world, Notifier& notifier) {
+  server.Run(worker, world, notifier);
 }
 
 int main() {
@@ -31,15 +28,25 @@ int main() {
   World world;
 
   // Start servers
-  std::thread server_thread(run_server, std::ref(server), std::ref(worker), std::ref(world), std::ref(notifier));
   std::thread api_thread(run_api, std::ref(api));
+  std::thread server_thread(run_server, std::ref(server), std::ref(worker), std::ref(world), std::ref(notifier));
 
   // Run players
   worker.Run();
 
-  // Join threads
-  server_thread.join();
-  api_thread.join();
+  // Client synchronization
+  while(true) {
+    world.Lock();
+
+    std::ostringstream stream;
+    world.Print(stream);
+    notifier.Notify(stream.str());
+
+    world.Unlock();
+
+    // Every second
+    std::this_thread::sleep_for(std::chrono::seconds(1));
+  }
 
   return 0;
 }
