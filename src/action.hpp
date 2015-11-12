@@ -11,6 +11,7 @@ class Action {
   Action(std::string type);
 
   const std::string& type() const;
+  virtual std::string str() const = 0;
 
   void PrintJSON(std::ostream& stream) const;
 

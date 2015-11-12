@@ -26,26 +26,28 @@ void Server::Run(Worker& worker, World& world, Notifier& notifier) {
 
     if(worker.has_player_with_key(key)) {
       // Player exists
-      debug::Println("SERVER", data);
-
       unsigned int player_id = worker.player_id(key);
       Action* action = Action::Read(msg);
 
-      // Lock the world, so no one can read while updating it
-      world.Lock();
+      if(action == 0) {
+        debug::Println("SERVER", "Invalid action received");
+      } else {
+        // Lock the world, so no one can read while updating it
+        world.Lock();
 
-      // Perform action
-      world.Update(player_id, *action);
+        // Perform action
+        world.Update(player_id, *action);
 
-      // Notify action
-      std::ostringstream action_json;
-      action->PrintJSON(action_json);
-      notifier.Notify("ACTION " + std::to_string(player_id) + " " + action_json.str());
+        // Notify action
+        std::ostringstream action_json;
+        action->PrintJSON(action_json);
+        notifier.Notify("ACTION " + std::to_string(player_id) + " " + action_json.str());
 
-      // Unlock the world
-      world.Unlock();
+        // Unlock the world
+        world.Unlock();
 
-      delete action;
+        delete action;
+      }
 
       // Reply with the current game world
       std::ostringstream world_serialized;

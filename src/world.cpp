@@ -1,4 +1,5 @@
 #include <fstream>
+#include <action/move.hpp>
 #include "world.hpp"
 
 namespace mmpg {
@@ -18,7 +19,7 @@ void World::Read(std::istream& stream) {
 
   while(stream >> section) {
     if(section == "PLAYERS") {
-      int x, y;
+      float x, y;
 
       while(stream >> x >> y) {
         Ship* ship = new Ship;
@@ -33,6 +34,24 @@ void World::Read(std::istream& stream) {
 
 void World::Update(int player, const Action& action) {
   // TODO: Update world accordingly
+  if(action.type() == "move") {
+    const Move& move = (const Move&) action;
+
+    switch(move.direction()) {
+      case 'U':
+        ships_[player]->y += 0.1f;
+        break;
+      case 'D':
+        ships_[player]->y -= 0.1f;
+        break;
+      case 'L':
+        ships_[player]->x -= 0.1f;
+        break;
+      case 'R':
+        ships_[player]->x += 0.1f;
+        break;
+    }
+  }
 }
 
 

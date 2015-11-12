@@ -20,7 +20,7 @@ class World {
   void PrintJSON(std::ostream& stream);
 
   struct Ship {
-    int x, y;
+    float x, y;
   };
 
  private:

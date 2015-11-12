@@ -17,7 +17,7 @@ Action* Action::Read(std::istream& data) {
       return new Move(t);
 
     default:
-      throw "Undefined action";
+      return 0;
   }
 }
 

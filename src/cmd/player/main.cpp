@@ -1,6 +1,8 @@
 #include <zmq.hpp>
 #include <thread>
+#include <sstream>
 #include "../../utils.hpp"
+#include "ai.hpp"
 
 using namespace mmpg;
 
@@ -16,15 +18,35 @@ int main(int argc, char* argv[]) {
 
   server.connect("tcp://127.0.0.1:5557");
 
-  std::string action = id + " U";
+  AI* ai = AI::main;
 
-  server.send(action.c_str(), action.length());
+  if(ai == 0) {
+    throw "AI not registered";
+  }
 
-  zmq::message_t world_status;
-  server.recv(&world_status);
+  // TODO: Set AI world
 
   while(true) {
-    std::this_thread::sleep_for(std::chrono::seconds(1));
+    Action* action = ai->play();
+
+    if(action == 0) {
+      continue;
+    }
+
+    std::string msg = id + " " + action->str();
+    server.send(msg.c_str(), msg.length());
+
+    delete action;
+
+    zmq::message_t reply;
+    server.recv(&reply);
+
+    std::string world_state = std::string((const char*)reply.data(), reply.size());
+    std::istringstream world_stream(world_state);
+
+    // TODO: Update AI world
+
+    std::this_thread::sleep_for(std::chrono::milliseconds(33));
   }
 
   return 0;

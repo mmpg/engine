@@ -11,6 +11,7 @@ find_package(ZeroMQ REQUIRED)
 include_directories(
         ${ZEROMQ_INCLUDE_DIRS}
         lib/cppzmq
+        src
 )
 
 # Common source files
@@ -41,6 +42,7 @@ target_link_libraries(master
 # Players
 add_executable(player
         src/cmd/player/main.cpp
+        src/cmd/player/ai.cpp
         match/build/ai.cpp
         ${SOURCE_FILES}
 )

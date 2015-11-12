@@ -10,6 +10,9 @@ class Move : public Action {
 
   Move(char direction);
 
+  char direction() const;
+  std::string str() const;
+
  protected:
   void end_json(std::ostream& stream) const;
 
