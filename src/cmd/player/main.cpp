@@ -1,12 +1,17 @@
 #include <zmq.hpp>
 #include <thread>
 #include <sstream>
+#include <sys/prctl.h>
+#include <signal.h>
 #include "../../utils.hpp"
 #include "ai.hpp"
 
 using namespace mmpg;
 
 int main(int argc, char* argv[]) {
+  // Kill when parent dies
+  prctl(PR_SET_PDEATHSIG, SIGKILL);
+
   if(argc < 2) {
     return 1;
   }

@@ -1,0 +1,50 @@
+#!/usr/bin/env bash
+
+# Sends a signal to a process
+sig () {
+  test -s "$1" && kill -$2 `cat $1` > /dev/null 2>&1
+}
+
+pid=build/master.pid
+
+# Useful aliases
+engine_running () {
+  sig ${pid} 0
+}
+
+stop_engine () {
+  sig ${pid} TERM
+}
+
+# Fetch origin repository
+echo 'Fetching changes...'
+git fetch --all
+
+# Force checkout to branch
+echo 'Applying changes...'
+git checkout --force origin/master
+
+# Wait for the current engine to shut down
+echo 'Shutting down the current engine...'
+stop_engine
+
+n=10
+while engine_running && test ${n} -ge 0
+do
+  printf >&2 '.'
+  sleep 1
+  n=$(( $n - 1 ))
+done
+
+test ${n} -lt 10 && echo >&2 ''
+
+engine_running && echo 'ERROR: Engine has not stopped.' && exit 1
+echo 'Engine stopped successfully.'
+
+# Compile new engine
+echo 'Compiling new engine...'
+cd build && cmake .. && make master && cd ..
+
+# Execute new engine
+echo 'Executing new engine...'
+nohup ./build/master >> build/master.out & echo $! > build/master.pid
