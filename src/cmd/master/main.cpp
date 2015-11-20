@@ -13,8 +13,8 @@ void run_api(Api& api) {
   api.Run();
 }
 
-void run_server(Server& server, Worker& worker, World& world, Notifier& notifier) {
-  server.Run(worker, world, notifier);
+void run_server(Server& server, Worker& worker, World& world, Notifier& notifier, Log& log) {
+  server.Run(worker, world, notifier, log);
 }
 
 int main() {
@@ -31,9 +31,13 @@ int main() {
   World world;
   world.Read("match/world.txt");
 
+  // Game log
+  Log log("match/log");
+
   // Start servers
   std::thread api_thread(run_api, std::ref(api));
-  std::thread server_thread(run_server, std::ref(server), std::ref(worker), std::ref(world), std::ref(notifier));
+  std::thread server_thread(run_server, std::ref(server), std::ref(worker), std::ref(world), std::ref(notifier),
+                            std::ref(log));
 
   // Run players
   worker.Run();
@@ -42,9 +46,15 @@ int main() {
   while(true) {
     world.Lock();
 
+    log.Flush();
+
     std::ostringstream stream;
     world.PrintJSON(stream);
-    notifier.Notify("SYNC " + stream.str());
+
+    std::string notification = "SYNC " + stream.str();
+    notifier.Notify(notification);
+
+    log.Add(notification);
 
     world.Unlock();
 

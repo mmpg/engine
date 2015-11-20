@@ -18,6 +18,7 @@ include_directories(
 set(SOURCE_FILES
         src/utils.cpp
         src/debug.cpp
+        src/log.cpp
         src/world.cpp
         src/action.cpp
         src/action/move.cpp

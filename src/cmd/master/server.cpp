@@ -11,7 +11,7 @@ Server::Server(zmq::context_t& context, unsigned int port) : socket_(context, ZM
 }
 
 
-void Server::Run(Worker& worker, World& world, Notifier& notifier) {
+void Server::Run(Worker& worker, World& world, Notifier& notifier, Log& log) {
   while(true) {
     zmq::message_t request;
     socket_.recv(&request);
@@ -41,7 +41,10 @@ void Server::Run(Worker& worker, World& world, Notifier& notifier) {
         // Notify action
         std::ostringstream action_json;
         action->PrintJSON(action_json);
-        notifier.Notify("ACTION " + std::to_string(player_id) + " " + action_json.str());
+        std::string notification = "ACTION " + std::to_string(player_id) + " " + action_json.str();
+
+        notifier.Notify(notification);
+        log.Add(notification);
 
         // Unlock the world
         world.Unlock();
