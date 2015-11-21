@@ -1,6 +1,7 @@
 #include <sstream>
 #include "server.hpp"
 #include "../../debug.hpp"
+#include "../../utils.hpp"
 
 namespace mmpg {
 
@@ -41,7 +42,7 @@ void Server::Run(Worker& worker, World& world, Notifier& notifier, Log& log) {
         // Notify action
         std::ostringstream action_json;
         action->PrintJSON(action_json);
-        std::string notification = "ACTION " + std::to_string(player_id) + " " + action_json.str();
+        std::string notification = std::to_string(utils::time()) + " ACTION " + std::to_string(player_id) + " " + action_json.str();
 
         notifier.Notify(notification);
         log.Add(notification);

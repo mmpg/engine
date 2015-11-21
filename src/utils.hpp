@@ -3,6 +3,7 @@
 #include <string>
 #include <vector>
 #include <sys/stat.h>
+#include <chrono>
 
 /**
  * Defines customized error macros.
@@ -33,6 +34,8 @@ pid_t Fork();
 bool IsAlive(pid_t pid);
 
 std::string uuid();
+
+long int time();
 
 }
 }

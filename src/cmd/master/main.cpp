@@ -6,6 +6,7 @@
 #include "notifier.hpp"
 #include "api.hpp"
 #include "server.hpp"
+#include "utils.hpp"
 
 using namespace mmpg;
 
@@ -51,7 +52,7 @@ int main() {
     std::ostringstream stream;
     world.PrintJSON(stream);
 
-    std::string notification = "SYNC " + stream.str();
+    std::string notification = std::to_string(utils::time()) + " SYNC " + stream.str();
     notifier.Notify(notification);
 
     log.Add(notification);
