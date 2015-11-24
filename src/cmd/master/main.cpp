@@ -10,8 +10,8 @@
 
 using namespace mmpg;
 
-void run_api(Api& api) {
-  api.Run();
+void run_api(Api& api, Log& log) {
+  api.Run(log);
 }
 
 void run_server(Server& server, Worker& worker, World& world, Notifier& notifier, Log& log) {
@@ -36,7 +36,7 @@ int main() {
   Log log("match/log");
 
   // Start servers
-  std::thread api_thread(run_api, std::ref(api));
+  std::thread api_thread(run_api, std::ref(api), std::ref(log));
   std::thread server_thread(run_server, std::ref(server), std::ref(worker), std::ref(world), std::ref(notifier),
                             std::ref(log));
 

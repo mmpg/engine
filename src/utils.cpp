@@ -130,5 +130,9 @@ long int time() {
   return tp.tv_sec * 1000 + tp.tv_usec / 1000;
 }
 
+void Send(zmq::socket_t& socket, const std::string& msg) {
+  socket.send(msg.c_str(), msg.length());
+}
+
 }
 }

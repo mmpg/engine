@@ -4,6 +4,7 @@
 #include <vector>
 #include <sys/stat.h>
 #include <chrono>
+#include <zmq.hpp>
 
 /**
  * Defines customized error macros.
@@ -36,6 +37,8 @@ bool IsAlive(pid_t pid);
 std::string uuid();
 
 long int time();
+
+void Send(zmq::socket_t& socket, const std::string& msg);
 
 }
 }
