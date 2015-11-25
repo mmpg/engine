@@ -4,11 +4,12 @@
 #include <string.h>
 #include <uuid/uuid.h>
 #include <sys/wait.h>
+#include <fstream>
 
 namespace mmpg {
 namespace utils {
 
-void Mkdir(std::string path, __mode_t mode) {
+void Mkdir(const std::string& path, __mode_t mode) {
   struct stat sb;
 
   if(stat(path.c_str(), &sb) == 0 && S_ISDIR(sb.st_mode)) {
@@ -23,7 +24,7 @@ void Mkdir(std::string path, __mode_t mode) {
   }
 }
 
-void Mkfifo(std::string path) {
+void Mkfifo(const std::string& path) {
   int error;
   error = mkfifo(path.c_str(), O_CREAT);
 
@@ -38,7 +39,7 @@ void Mkfifo(std::string path) {
   }
 }
 
-void Unlink(std::string path) {
+void Unlink(const std::string& path) {
   int error = unlink(path.c_str());
 
   if(error != 0) {
@@ -46,7 +47,7 @@ void Unlink(std::string path) {
   }
 }
 
-void Chdir(std::string path) {
+void Chdir(const std::string& path) {
   int error = chdir(path.c_str());
 
   if(error != 0) {
@@ -54,7 +55,7 @@ void Chdir(std::string path) {
   }
 }
 
-void Exec(std::string path, std::vector<std::string> args) {
+void Exec(const std::string& path, std::vector<std::string> args) {
   char* argv[args.size() + 1];
 
   for(int i = 0;  i < args.size(); ++i) {
@@ -72,15 +73,15 @@ void Sleep(unsigned int ms) {
   usleep(ms * 1000);
 }
 
-bool FileExists(std::string path) {
+bool FileExists(const std::string& path) {
   return access(path.c_str(), F_OK) != -1;
 }
 
-bool System(std::string cmd) {
+bool System(const std::string& cmd) {
   return ::system(cmd.c_str()) == 0;
 }
 
-int Open(std::string path, int mode) {
+int Open(const std::string& path, int mode) {
   int fd = open(path.c_str(), mode);
 
   if(fd < 0) {
@@ -90,12 +91,24 @@ int Open(std::string path, int mode) {
   return fd;
 }
 
-int OpenForRead(std::string path) {
+int OpenForRead(const std::string& path) {
   return Open(path, O_RDONLY);
 }
 
-int OpenForWrite(std::string path) {
+int OpenForWrite(const std::string& path) {
   return Open(path, O_WRONLY);
+}
+
+std::string ReadFile(const std::string& path) {
+  std::ifstream t(path);
+  t.seekg(0, std::ios::end);
+  size_t size = (size_t) t.tellg();
+
+  std::string buffer(size, ' ');
+  t.seekg(0);
+  t.read(&buffer[0], size);
+
+  return buffer;
 }
 
 pid_t Fork() {

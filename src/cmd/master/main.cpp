@@ -35,6 +35,9 @@ int main() {
   // Game log
   Log log("match/log");
 
+  // TODO: Clear log when new match only
+  log.Clear();
+
   // Start servers
   std::thread api_thread(run_api, std::ref(api), std::ref(log));
   std::thread server_thread(run_server, std::ref(server), std::ref(worker), std::ref(world), std::ref(notifier),

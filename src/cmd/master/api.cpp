@@ -7,19 +7,19 @@ namespace mmpg {
 
 namespace {
 
-void BadAttribute(std::string attr, zmq::socket_t& response) {
-  utils::Send(response, "ERROR|Bad attribute value for: " + attr);
+void InvalidAttribute(zmq::socket_t& response, std::string attr) {
+  utils::Send(response, "ERROR|Invalid attribute value for: " + attr);
 }
 
 void FetchLog(std::istream& request, zmq::socket_t& response, const Log& world_log) {
-  long unsigned int time;
+  unsigned int time;
 
   if(!(request >> time)) {
-    BadAttribute("time", response);
+    InvalidAttribute(response, "time");
     return;
   }
 
-  utils::Send(response, "TODO: Fetch and send log");
+  utils::Send(response, world_log.Read(time));
 }
 
 void UnknownRequest(std::istream& request, zmq::socket_t& response, const Log& world_log) {

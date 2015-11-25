@@ -17,19 +17,21 @@
 namespace mmpg {
 namespace utils {
 
-void Mkdir(std::string path, __mode_t mode);
-void Mkfifo(std::string path);
-void Unlink(std::string path);
-void Chdir(std::string path);
-void Exec(std::string path, std::vector<std::string> args);
+void Mkdir(const std::string& path, __mode_t mode);
+void Mkfifo(const std::string& path);
+void Unlink(const std::string& path);
+void Chdir(const std::string& path);
+void Exec(const std::string& path, std::vector<std::string> args);
 void Sleep(unsigned int ms);
 
-bool FileExists(std::string path);
-bool System(std::string cmd);
+bool FileExists(const std::string& path);
+bool System(const std::string& cmd);
 
-int Open(std::string path, int mode);
-int OpenForRead(std::string path);
-int OpenForWrite(std::string path);
+std::string ReadFile(const std::string& path);
+
+int Open(const std::string& path, int mode);
+int OpenForRead(const std::string& path);
+int OpenForWrite(const std::string& path);
 
 pid_t Fork();
 bool IsAlive(pid_t pid);
