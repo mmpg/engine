@@ -1,6 +1,7 @@
 #include <zmq.hpp>
 #include <thread>
 #include <sstream>
+#include <set>
 #include "worker.hpp"
 #include "../../world.hpp"
 #include "notifier.hpp"
@@ -10,8 +11,8 @@
 
 using namespace mmpg;
 
-void run_api(Api& api, Log& log) {
-  api.Run(log);
+void run_api(Api& api, Worker& worker, Log& log) {
+  api.Run(worker, log);
 }
 
 void run_server(Server& server, Worker& worker, World& world, Notifier& notifier, Log& log) {
@@ -26,6 +27,10 @@ int main() {
   Api api(zcontext, 5555);
   Notifier notifier(zcontext, 5556);
   Server server(zcontext, 5557);
+
+  // TODO: Read workers from file
+  // TODO: Initialize them properly and distribute players
+  // TODO: Use a worker vector
   Worker worker;
 
   // Game world
@@ -39,7 +44,7 @@ int main() {
   log.Clear();
 
   // Start servers
-  std::thread api_thread(run_api, std::ref(api), std::ref(log));
+  std::thread api_thread(run_api, std::ref(api), std::ref(worker), std::ref(log));
   std::thread server_thread(run_server, std::ref(server), std::ref(worker), std::ref(world), std::ref(notifier),
                             std::ref(log));
 

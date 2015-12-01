@@ -40,6 +40,17 @@ target_link_libraries(master
         uuid
 )
 
+# Workers
+add_executable(worker
+        src/cmd/worker/main.cpp
+        ${SOURCE_FILES}
+)
+
+target_link_libraries(worker
+        ${ZEROMQ_LIBRARIES}
+        uuid
+)
+
 # Players
 add_executable(player
         src/cmd/player/main.cpp

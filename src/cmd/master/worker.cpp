@@ -51,14 +51,15 @@ void Worker::read_players() {
   // Read players
   std::ifstream input("match/players.txt");
 
-  unsigned int id;
+  unsigned int id = 0;
   std::string email;
 
-  while(input >> id >> email) {
+  while(input >> email) {
     Player* player = new Player(id, email);
 
     key_player_[player->key()] = player;
     email_player_[player->email()] = player;
+    id++;
   }
 }
 
