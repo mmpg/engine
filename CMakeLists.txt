@@ -43,6 +43,7 @@ target_link_libraries(master
 # Workers
 add_executable(worker
         src/cmd/worker/main.cpp
+        src/cmd/worker/player.cpp
         ${SOURCE_FILES}
 )
 
