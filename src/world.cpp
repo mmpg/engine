@@ -9,7 +9,7 @@ World::World() {
 }
 
 void World::Read(std::string path) {
-  std::ifstream stream("match/world.txt");
+  std::ifstream stream(path);
   Read(stream);
 }
 
