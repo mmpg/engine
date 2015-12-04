@@ -9,6 +9,7 @@ class Action {
   static Action* Read(std::istream& stream);
 
   Action(std::string type);
+  virtual ~Action();
 
   const std::string& type() const;
   virtual std::string str() const = 0;
