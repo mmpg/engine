@@ -42,5 +42,6 @@ long int time();
 
 void Send(zmq::socket_t& socket, const std::string& msg);
 
+std::string Base64Decode(const std::string& encoded);
 }
 }

@@ -9,6 +9,7 @@ namespace {
 
 const int CODE_FETCH_LOG = 0;
 const int CODE_PLAYER_EXISTS = 1;
+const int CODE_DEPLOY_PLAYER = 2;
 
 void InvalidAttribute(zmq::socket_t& response, std::string attr) {
   utils::Send(response, "ERROR|Invalid attribute value for: " + attr);
@@ -40,13 +41,33 @@ void PlayerExists(std::istream& request, zmq::socket_t& response, const Worker& 
   utils::Send(response, worker.has_player_with_email(email) ? "TRUE" : "FALSE");
 }
 
+void DeployPlayer(std::istream& request, zmq::socket_t& response, const Worker& worker) {
+  std::string email;
+
+  if(!(request >> email) or !worker.has_player_with_email(email)) {
+    InvalidAttribute(response, "email");
+    return;
+  }
+
+  std::string player;
+
+  if(!(request >> player)) {
+    InvalidAttribute(response, "player");
+    return;
+  }
+
+  debug::Println(utils::Base64Decode(player));
+  utils::Send(response, "OK");
+}
+
 }
 
 Api::Api(zmq::context_t &context, unsigned int port) :
     socket_(context, ZMQ_REP),
     handlers_({
                   {"LOG", CODE_FETCH_LOG},
-                  {"PLAYER_EXISTS", CODE_PLAYER_EXISTS}
+                  {"PLAYER_EXISTS", CODE_PLAYER_EXISTS},
+                  {"DEPLOY_PLAYER", CODE_DEPLOY_PLAYER}
               })
 {
   socket_.bind("tcp://*:" + std::to_string(port));
@@ -81,6 +102,10 @@ void Api::Run(const Worker& worker, const Log& world_log) {
 
         case CODE_PLAYER_EXISTS:
           PlayerExists(request_stream, socket_, worker);
+          break;
+
+        case CODE_DEPLOY_PLAYER:
+          DeployPlayer(request_stream, socket_, worker);
           break;
 
         default:
