@@ -60,7 +60,7 @@ void Player::Stop() {
     return;
   }
 
-  utils::Stop(pid_, 2);
+  utils::Stop(pid_, 2000);
 }
 
 void Player::Update(const std::string& code) {
