@@ -111,6 +111,10 @@ std::string ReadFile(const std::string& path) {
   return buffer;
 }
 
+bool RenameFile(const std::string& current_name, const std::string& new_name) {
+  return rename(current_name.c_str(), new_name.c_str()) == 0;
+}
+
 pid_t Fork() {
   pid_t pid = fork();
 

@@ -34,8 +34,10 @@ bool Worker::Deploy(const std::string& email, const std::string& code) {
   debug::Println("WORKER", "Compiling: " + email);
   player->Build();
 
-  if(!player->is_built())
+  if(!player->is_built()) {
+    player->Recover();
     return false;
+  }
 
   debug::Println("WORKER", "Stopping: " + email);
   player->Stop();

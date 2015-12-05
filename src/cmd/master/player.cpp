@@ -64,13 +64,31 @@ void Player::Stop() {
 }
 
 void Player::Update(const std::string& code) {
-  std::ofstream ai(path() + "/ai.cpp");
+  // TODO: Remove code duplication
+  // TODO: Save all the submissions
+  std::string file = path() + "/ai.cpp";
+  std::string backup = file + ".backup";
+
+  if(utils::FileExists(file)) {
+    utils::RenameFile(file, backup);
+  }
+
+  std::ofstream ai(file);
 
   ai << code;
 
   ai.close();
 
   is_built_ = false;
+}
+
+void Player::Recover() {
+  std::string file = path() + "/ai.cpp";
+  std::string backup = file + ".backup";
+
+  if(utils::FileExists(backup)) {
+    utils::RenameFile(backup, file);
+  }
 }
 
 }

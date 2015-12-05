@@ -28,6 +28,7 @@ bool FileExists(const std::string& path);
 bool System(const std::string& cmd);
 
 std::string ReadFile(const std::string& path);
+bool RenameFile(const std::string& current_name, const std::string& new_name);
 
 int Open(const std::string& path, int mode);
 int OpenForRead(const std::string& path);

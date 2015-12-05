@@ -13,6 +13,7 @@ class Player {
   void Start();
   void Stop();
   void Update(const std::string& code);
+  void Recover();
 
   unsigned int id() const;
   const std::string& key() const;
