@@ -130,10 +130,10 @@ bool IsAlive(pid_t pid) {
   return waitpid(pid, &status, WNOHANG) == 0;
 }
 
-void Stop(pid_t pid, unsigned int timeout) {
-  kill(pid, SIGQUIT);
-
+void Stop(pid_t pid, int timeout) {
   while(timeout > 0) {
+    kill(pid, SIGQUIT);
+
     if(!IsAlive(pid)) {
       return;
     }
