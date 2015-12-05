@@ -29,7 +29,7 @@ void Log::Flush() {
     *file_ << lines_[0];
   }
 
-  for(int i = 1; i < lines_.size(); ++i) {
+  for(unsigned int i = 1; i < lines_.size(); ++i) {
     *file_ << '\n' << lines_[i];
   }
 

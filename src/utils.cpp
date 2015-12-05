@@ -58,7 +58,7 @@ void Chdir(const std::string& path) {
 void Exec(const std::string& path, std::vector<std::string> args) {
   char* argv[args.size() + 1];
 
-  for(int i = 0;  i < args.size(); ++i) {
+  for(unsigned int i = 0;  i < args.size(); ++i) {
     argv[i] = strdup(args[i].c_str());
   }
 
@@ -128,8 +128,6 @@ bool IsAlive(pid_t pid) {
 
 void Stop(pid_t pid, unsigned int timeout) {
   kill(pid, SIGQUIT);
-
-  int status;
 
   while(timeout > 0) {
     if(!IsAlive(pid)) {

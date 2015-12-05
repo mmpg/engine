@@ -16,6 +16,7 @@ void InvalidAttribute(zmq::socket_t& response, std::string attr) {
 }
 
 void UnknownRequest(std::istream& request, zmq::socket_t& response) {
+  (void) request;
   utils::Send(response, "ERROR|Unknown request");
 }
 
