@@ -131,18 +131,12 @@ bool IsAlive(pid_t pid) {
 }
 
 void Stop(pid_t pid, int timeout) {
-  while(timeout > 0) {
-    kill(pid, SIGQUIT);
+  while(IsAlive(pid)) {
+    kill(pid, timeout < 0 ? SIGKILL : SIGQUIT);
 
-    if(!IsAlive(pid)) {
-      return;
-    }
-
-    Sleep(200);
-    timeout -= 200;
+    Sleep(100);
+    timeout -= 100;
   }
-
-  kill(pid, SIGKILL);
 }
 
 std::string uuid() {
