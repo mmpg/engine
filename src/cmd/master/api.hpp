@@ -13,7 +13,7 @@ class Api {
  public:
   Api(zmq::context_t& context, unsigned int port);
 
-  void Run(const Worker& worker, const Log& log);
+  void Run(Worker& worker, const Log& log);
 
  private:
   zmq::socket_t socket_;

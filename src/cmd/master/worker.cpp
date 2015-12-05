@@ -25,6 +25,30 @@ void Worker::Run() {
   run_players();
 }
 
+bool Worker::Deploy(const std::string& email, const std::string& code) {
+  Player* player = email_player_.find(email)->second;
+
+  debug::Println("WORKER", "Updating: " + email);
+  player->Update(code);
+
+  debug::Println("WORKER", "Compiling: " + email);
+  player->Build();
+
+  if(!player->is_built())
+    return false;
+
+  debug::Println("WORKER", "Stopping: " + email);
+  player->Stop();
+
+  if(player->is_alive())
+    return false;
+
+  debug::Println("WORKER", "Starting: " + email);
+  player->Start();
+
+  return player->is_alive();
+}
+
 
 bool Worker::has_player_with_key(const std::string& key) const {
   return key_player_.find(key) != key_player_.end();
@@ -71,7 +95,7 @@ void Worker::compile_players() {
 
     debug::Print("WORKER", "    " + player->email() + "...");
 
-    player->build();
+    player->Build();
 
     debug::Println(player->is_built() ? " ok" : " failed");
   }
@@ -86,10 +110,11 @@ void Worker::run_players() {
     if(player->is_built()) {
       debug::Print("WORKER", "    " + player->email() + "...");
 
-      player->start();
+      player->Start();
 
       debug::Println(player->is_alive() ? " ok" : " failed");
     }
   }
 }
+
 }

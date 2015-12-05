@@ -35,6 +35,7 @@ int OpenForWrite(const std::string& path);
 
 pid_t Fork();
 bool IsAlive(pid_t pid);
+void Stop(pid_t pid, unsigned int timeout);
 
 std::string uuid();
 

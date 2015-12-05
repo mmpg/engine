@@ -9,8 +9,10 @@ class Player {
   Player(unsigned int id, std::string email);
   ~Player();
 
-  void build();
-  void start();
+  void Build();
+  void Start();
+  void Stop();
+  void Update(const std::string& code);
 
   unsigned int id() const;
   const std::string& key() const;

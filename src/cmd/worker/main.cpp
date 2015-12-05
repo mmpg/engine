@@ -33,7 +33,7 @@ void compile_players(const std::vector<Player*>& players) {
   for(Player* player : players) {
     debug::Print("WORKER", "    " + player->email() + "...");
 
-    player->build();
+    player->Build();
 
     debug::Println(player->is_built() ? " ok" : " failed");
   }
@@ -46,7 +46,7 @@ void run_players(const std::vector<Player*>& players) {
     if(player->is_built()) {
       debug::Print("WORKER", "    " + player->email() + "...");
 
-      player->start();
+      player->Start();
 
       debug::Println(player->is_alive() ? " ok" : " failed");
     }

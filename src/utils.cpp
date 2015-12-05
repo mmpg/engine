@@ -126,6 +126,23 @@ bool IsAlive(pid_t pid) {
   return waitpid(pid, &status, WNOHANG) == 0;
 }
 
+void Stop(pid_t pid, unsigned int timeout) {
+  kill(pid, SIGQUIT);
+
+  int status;
+
+  while(timeout > 0) {
+    if(!IsAlive(pid)) {
+      return;
+    }
+
+    Sleep(200);
+    timeout -= 200;
+  }
+
+  kill(pid, SIGKILL);
+}
+
 std::string uuid() {
   uuid_t t;
   uuid_generate(t);

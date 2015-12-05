@@ -41,7 +41,7 @@ void PlayerExists(std::istream& request, zmq::socket_t& response, const Worker& 
   utils::Send(response, worker.has_player_with_email(email) ? "TRUE" : "FALSE");
 }
 
-void DeployPlayer(std::istream& request, zmq::socket_t& response, const Worker& worker) {
+void DeployPlayer(std::istream& request, zmq::socket_t& response, Worker& worker) {
   std::string email;
 
   if(!(request >> email) or !worker.has_player_with_email(email)) {
@@ -56,8 +56,10 @@ void DeployPlayer(std::istream& request, zmq::socket_t& response, const Worker& 
     return;
   }
 
-  debug::Println(utils::Base64Decode(player));
-  utils::Send(response, "OK");
+  // TODO: Get compilation error info
+  bool ok = worker.Deploy(email, utils::Base64Decode(player));
+
+  utils::Send(response, ok ? "OK" : "ERROR");
 }
 
 }
@@ -75,7 +77,7 @@ Api::Api(zmq::context_t &context, unsigned int port) :
   debug::Println("API", "Listening to 0.0.0.0:" + std::to_string(port) + "...");
 }
 
-void Api::Run(const Worker& worker, const Log& world_log) {
+void Api::Run(Worker& worker, const Log& world_log) {
   while(true) {
     zmq::message_t request;
     socket_.recv(&request);

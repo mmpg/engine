@@ -13,14 +13,14 @@ Player::~Player() {
 
 }
 
-void Player::build() {
+void Player::Build() {
   // TODO: Improve error management
   utils::Mkdir(path(), 0777);
 
   is_built_ = utils::System("./bin/build_player " + email_);
 }
 
-void Player::start() {
+void Player::Start() {
   pid_ = utils::Fork();
 
   if(pid_ == 0) {

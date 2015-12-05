@@ -1,10 +1,11 @@
+#include <fstream>
 #include "player.hpp"
 #include "../../utils.hpp"
 
 namespace mmpg {
 
 Player::Player(unsigned int id, std::string email) : id_(id), key_(utils::uuid()), email_(email), is_built_(false),
-                                                     pid_(-1)
+                                                     pid_(0)
 {
 
 }
@@ -13,14 +14,14 @@ Player::~Player() {
 
 }
 
-void Player::build() {
+void Player::Build() {
   // TODO: Improve error management
   utils::Mkdir(path(), 0777);
 
   is_built_ = utils::System("./bin/build_player " + email_);
 }
 
-void Player::start() {
+void Player::Start() {
   pid_ = utils::Fork();
 
   if(pid_ == 0) {
@@ -50,7 +51,26 @@ bool Player::is_built() const {
 }
 
 bool Player::is_alive() const {
-  return utils::IsAlive(pid_);
+  return pid_ > 0 and utils::IsAlive(pid_);
+}
+
+
+void Player::Stop() {
+  if(!is_alive()) {
+    return;
+  }
+
+  utils::Stop(pid_, 2);
+}
+
+void Player::Update(const std::string& code) {
+  std::ofstream ai(path() + "/ai.cpp");
+
+  ai << code;
+
+  ai.close();
+
+  is_built_ = false;
 }
 
 }

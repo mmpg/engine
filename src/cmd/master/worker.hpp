@@ -12,6 +12,8 @@ class Worker {
 
   void Run();
 
+  bool Deploy(const std::string& email, const std::string& code);
+
   bool has_player_with_key(const std::string& key) const;
   bool has_player_with_email(const std::string& email) const;
   unsigned int player_id(const std::string& key) const;
