@@ -30,7 +30,7 @@ set(SOURCE_FILES
 )
 
 # Master
-add_executable(master
+set(MMPG_MASTER_SOURCE_FILES
         src/cmd/master/main.cpp
         src/cmd/master/server.cpp
         src/cmd/master/worker.cpp
@@ -40,32 +40,21 @@ add_executable(master
         ${SOURCE_FILES}
 )
 
-target_link_libraries(master
-        ${ZEROMQ_LIBRARIES}
-        uuid
-)
-
-# Workers
-add_executable(worker
-        src/cmd/worker/main.cpp
-        src/cmd/worker/player.cpp
-        ${SOURCE_FILES}
-)
-
-target_link_libraries(worker
-        ${ZEROMQ_LIBRARIES}
-        uuid
-)
-
-# Players
-add_executable(player
+set(MMPG_PLAYER_SOURCE_FILES
         src/cmd/player/main.cpp
         src/cmd/player/ai.cpp
-        match/build/ai.cpp
         ${SOURCE_FILES}
 )
 
-target_link_libraries(player
+
+add_library(MMPGMaster ${MMPG_MASTER_SOURCE_FILES})
+add_library(MMPGPlayer ${MMPG_PLAYER_SOURCE_FILES})
+
+# Shared variables
+set(MMPG_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/src CACHE INTERNAL "DIRS")
+set(MMPG_LIBRARIES
         ${ZEROMQ_LIBRARIES}
         uuid
+
+        CACHE INTERNAL "DIRS"
 )
