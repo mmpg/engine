@@ -19,7 +19,12 @@ set(SOURCE_FILES
         src/utils.cpp
         src/debug.cpp
         src/log.cpp
+
         src/world.cpp
+        src/world/universe.cpp
+        src/world/solar_system.cpp
+        src/world/sun.cpp
+
         src/action.cpp
         src/action/move.cpp
 )

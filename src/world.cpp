@@ -4,7 +4,7 @@
 
 namespace mmpg {
 
-World::World() {
+World::World() : solar_system_(time(NULL)) {
 
 }
 
@@ -70,7 +70,11 @@ void World::PrintJSON(std::ostream& stream) {
     stream << "{\"x\":" << ship->x << ",\"y\":" << ship->y << "}";
   }
 
-  stream << "]}";
+  stream << "],\"sun\":";
+
+  solar_system_.sun->PrintJSON(stream);
+
+  stream << "}";
 }
 
 void World::Lock() {

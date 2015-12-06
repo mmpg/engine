@@ -2,7 +2,9 @@
 
 #include <mutex>
 #include <vector>
+#include <world/solar_system.hpp>
 #include "action.hpp"
+
 
 namespace mmpg {
 
@@ -25,7 +27,10 @@ class World {
 
  private:
   std::mutex mutex_;
+
+  // TODO: Remove game-specific data
   std::vector<Ship*> ships_;
+  SolarSystem solar_system_;
 };
 
 }
