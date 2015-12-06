@@ -24,6 +24,10 @@ git fetch --all
 echo 'Applying changes...'
 git checkout --force origin/master
 
+# Update submodules
+echo 'Updating submodules...'
+git submodule update --init --recursive
+
 # Wait for the current engine to shut down
 echo 'Shutting down the current engine...'
 stop_engine
