@@ -1,7 +1,7 @@
 #include <sstream>
 #include "api.hpp"
-#include "../../utils.hpp"
-#include "../../debug.hpp"
+#include "../utils.hpp"
+#include "../debug.hpp"
 
 namespace mmpg {
 

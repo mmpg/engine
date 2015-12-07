@@ -2,7 +2,7 @@
 
 #include <zmq.hpp>
 #include "worker.hpp"
-#include "../../world.hpp"
+#include "../world.hpp"
 #include "notifier.hpp"
 #include "log.hpp"
 

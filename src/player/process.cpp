@@ -1,22 +1,26 @@
-#include <zmq.hpp>
-#include <thread>
-#include <sstream>
+#include "process.hpp"
+#include "../utils.hpp"
+#include "ai.hpp"
 #include <sys/prctl.h>
 #include <signal.h>
-#include "../../utils.hpp"
-#include "ai.hpp"
+#include <sstream>
+#include <thread>
 
-using namespace mmpg;
+namespace mmpg {
+namespace player {
 
-int main(int argc, char* argv[]) {
-  // Kill when parent dies
-  prctl(PR_SET_PDEATHSIG, SIGKILL);
-
+Process::Process(int argc, char* argv[]) {
   if(argc < 2) {
-    return 1;
+    throw "Player ID not provided";
   }
 
-  std::string id = argv[1];
+  id_ = argv[1];
+  run_ = true;
+}
+
+void Process::Run(World& world) {
+  // Kill when parent dies
+  prctl(PR_SET_PDEATHSIG, SIGKILL);
 
   zmq::context_t zcontext(1);
   zmq::socket_t server(zcontext, ZMQ_REQ);
@@ -30,15 +34,16 @@ int main(int argc, char* argv[]) {
   }
 
   // TODO: Set AI world
+  (void)world;
 
-  while(true) {
+  while(run_) {
     Action* action = ai->play();
 
     if(action == 0) {
       continue;
     }
 
-    std::string msg = id + " " + action->str();
+    std::string msg = id_ + " " + action->str();
     server.send(msg.c_str(), msg.length());
 
     delete action;
@@ -53,6 +58,7 @@ int main(int argc, char* argv[]) {
 
     std::this_thread::sleep_for(std::chrono::milliseconds(33));
   }
+}
 
-  return 0;
+}
 }

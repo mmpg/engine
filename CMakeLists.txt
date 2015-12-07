@@ -19,30 +19,24 @@ set(SOURCE_FILES
         src/utils.cpp
         src/debug.cpp
         src/log.cpp
-
         src/world.cpp
-        src/world/universe.cpp
-        src/world/solar_system.cpp
-        src/world/sun.cpp
-
         src/action.cpp
-        src/action/move.cpp
 )
 
 # Master
 set(MMPG_MASTER_SOURCE_FILES
-        src/cmd/master/main.cpp
-        src/cmd/master/server.cpp
-        src/cmd/master/worker.cpp
-        src/cmd/master/player.cpp
-        src/cmd/master/notifier.cpp
-        src/cmd/master/api.cpp
+        src/master/process.cpp
+        src/master/server.cpp
+        src/master/worker.cpp
+        src/master/player.cpp
+        src/master/notifier.cpp
+        src/master/api.cpp
         ${SOURCE_FILES}
 )
 
 set(MMPG_PLAYER_SOURCE_FILES
-        src/cmd/player/main.cpp
-        src/cmd/player/ai.cpp
+        src/player/process.cpp
+        src/player/ai.cpp
         ${SOURCE_FILES}
 )
 

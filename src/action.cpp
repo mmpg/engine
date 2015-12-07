@@ -1,26 +1,6 @@
 #include "action.hpp"
-#include "action/move.hpp"
 
 namespace mmpg {
-
-// TODO: Use a register
-Action* Action::Read(std::istream& data) {
-  char t;
-
-  data >> t;
-
-  switch(t) {
-    case 'U':
-    case 'D':
-    case 'L':
-    case 'R':
-      return new Move(t);
-
-    default:
-      return 0;
-  }
-}
-
 Action::Action(std::string type) : type_(type) {
 
 }

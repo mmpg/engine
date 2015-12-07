@@ -1,6 +1,6 @@
 #include <fstream>
 #include "player.hpp"
-#include "../../utils.hpp"
+#include "../utils.hpp"
 
 namespace mmpg {
 

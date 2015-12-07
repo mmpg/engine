@@ -1,7 +1,7 @@
 #include <sstream>
 #include "server.hpp"
-#include "../../debug.hpp"
-#include "../../utils.hpp"
+#include "../debug.hpp"
+#include "../utils.hpp"
 
 namespace mmpg {
 
@@ -28,7 +28,7 @@ void Server::Run(Worker& worker, World& world, Notifier& notifier, Log& log) {
     if(worker.has_player_with_key(key)) {
       // Player exists
       unsigned int player_id = worker.player_id(key);
-      Action* action = Action::Read(msg);
+      Action* action = world.ParseAction(msg);
 
       if(action == 0) {
         debug::Println("SERVER", "Invalid action received");

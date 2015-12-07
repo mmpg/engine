@@ -4,8 +4,8 @@
 
 #include <fstream>
 #include "worker.hpp"
-#include "../../utils.hpp"
-#include "../../debug.hpp"
+#include "../utils.hpp"
+#include "../debug.hpp"
 
 namespace mmpg {
 

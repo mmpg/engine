@@ -6,8 +6,6 @@ namespace mmpg {
 
 class Action {
  public:
-  static Action* Read(std::istream& stream);
-
   Action(std::string type);
   virtual ~Action();
 

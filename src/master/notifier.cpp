@@ -1,5 +1,5 @@
 #include "notifier.hpp"
-#include "../../debug.hpp"
+#include "../debug.hpp"
 
 namespace mmpg {
 Notifier::Notifier(zmq::context_t& context, unsigned int port) : socket_(context, ZMQ_PUB) {

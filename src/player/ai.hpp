@@ -13,13 +13,6 @@ class AI {
 
   virtual void load();
   virtual void save();
-
-  // TODO: Move game specific actions
-  Action* MoveUp() const;
-  Action* MoveDown() const;
-  Action* MoveLeft() const;
-  Action* MoveRight() const;
-
 };
 
 #define RegisterAI(x) static const int __x__ = mmpg::AI::Register(new x());
