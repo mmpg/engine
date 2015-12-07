@@ -3,7 +3,7 @@
 #include <string>
 #include <zmq.hpp>
 #include <map>
-#include "log.hpp"
+#include "../log.hpp"
 #include "notifier.hpp"
 #include "worker.hpp"
 

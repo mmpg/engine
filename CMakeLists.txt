@@ -11,7 +11,7 @@ find_package(ZeroMQ REQUIRED)
 include_directories(
         ${ZEROMQ_INCLUDE_DIRS}
         lib/cppzmq
-        src
+        include/mmpg
 )
 
 # Common source files
@@ -45,7 +45,7 @@ add_library(MMPGMaster ${MMPG_MASTER_SOURCE_FILES})
 add_library(MMPGPlayer ${MMPG_PLAYER_SOURCE_FILES})
 
 # Shared variables
-set(MMPG_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/src CACHE INTERNAL "DIRS")
+set(MMPG_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/include CACHE INTERNAL "DIRS")
 set(MMPG_LIBRARIES
         ${ZEROMQ_LIBRARIES}
         uuid

@@ -1,6 +1,6 @@
 #pragma once
 
-#include <world.hpp>
+#include "../world.hpp"
 #include "ai.hpp"
 
 namespace mmpg {

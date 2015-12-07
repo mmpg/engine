@@ -1,10 +1,10 @@
-#include "process.hpp"
-#include "../utils.hpp"
-#include "ai.hpp"
+#include <player/process.hpp>
+#include <player/ai.hpp>
 #include <sys/prctl.h>
 #include <signal.h>
 #include <sstream>
 #include <thread>
+#include "../utils.hpp"
 
 namespace mmpg {
 namespace player {

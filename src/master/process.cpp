@@ -1,6 +1,6 @@
 #include <thread>
 #include <sstream>
-#include "process.hpp"
+#include <master/process.hpp>
 #include "api.hpp"
 #include "server.hpp"
 #include "../utils.hpp"

@@ -1,4 +1,4 @@
-#include "ai.hpp"
+#include <player/ai.hpp>
 
 namespace mmpg {
 
