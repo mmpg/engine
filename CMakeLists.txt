@@ -17,6 +17,7 @@ include_directories(
 # Common source files
 set(SOURCE_FILES
         src/utils.cpp
+        src/base64.cpp
         src/debug.cpp
         src/log.cpp
         src/world.cpp

@@ -2,6 +2,7 @@
 #include "api.hpp"
 #include "../utils.hpp"
 #include "../debug.hpp"
+#include "../base64.hpp"
 
 namespace mmpg {
 
@@ -58,7 +59,7 @@ void DeployPlayer(std::istream& request, zmq::socket_t& response, Worker& worker
   }
 
   // TODO: Get compilation error info
-  bool ok = worker.Deploy(email, utils::Base64Decode(player));
+  bool ok = worker.Deploy(email, base64::Decode(player));
 
   utils::Send(response, ok ? "OK" : "ERROR");
 }

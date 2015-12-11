@@ -1,5 +1,6 @@
 #include "log.hpp"
 #include "utils.hpp"
+#include "base64.hpp"
 
 namespace mmpg {
 
@@ -10,10 +11,11 @@ Log::Log(std::string directory) : directory_(directory), file_(0) {
 }
 
 std::string Log::Read(unsigned int time) const {
-  std::string log = log_file(interval(time));
+  std::string gzip_file = log_file(interval(time)) + ".gz";
 
-  if(utils::FileExists(log)) {
-    return utils::ReadFile(log);
+  if(utils::FileExists(gzip_file)) {
+    std::string log = utils::ReadFile(gzip_file);
+    return base64::Encode((unsigned const char*)log.c_str(), (unsigned int)log.length());
   } else {
     return "";
   }
@@ -53,18 +55,30 @@ std::string Log::log_file(const std::time_t& interval) const {
 }
 
 void Log::new_log_file(const std::time_t& current) {
-  interval_ = current;
-
   if(file_) {
     file_->close();
+
+    // Gzip log file
+    utils::System("gzip " + log_file(interval_));
+
     delete file_;
   }
 
+  interval_ = current;
   file_ = new std::ofstream(log_file(interval_));
 }
 
 void Log::Clear() {
+  lines_.clear();
   utils::System("rm -f " + directory_ + "/*.log");
+
+  if(file_) {
+    file_->close();
+    delete file_;
+    file_ = 0;
+  }
+
   new_log_file(interval(std::time(0)));
 }
+
 }
