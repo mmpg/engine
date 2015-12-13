@@ -70,7 +70,7 @@ void Log::new_log_file(const std::time_t& current) {
 
 void Log::Clear() {
   lines_.clear();
-  utils::System("rm -f " + directory_ + "/*.log");
+  utils::System("rm -f " + directory_ + "/*.log*");
 
   if(file_) {
     file_->close();
