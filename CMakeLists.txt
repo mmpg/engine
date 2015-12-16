@@ -7,6 +7,7 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wall -Wextra")
 # 3rd party libraries
 list(APPEND CMAKE_MODULE_PATH "${SOURCE_DIR}")
 find_package(ZeroMQ REQUIRED)
+find_package(Threads)
 
 include_directories(
         ${ZEROMQ_INCLUDE_DIRS}
@@ -50,6 +51,7 @@ set(MMPG_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/include CACHE INTERNAL "DIRS")
 set(MMPG_LIBRARIES
         ${ZEROMQ_LIBRARIES}
         uuid
+        ${CMAKE_THREAD_LIBS_INIT}
 
         CACHE INTERNAL "DIRS"
 )

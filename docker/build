@@ -1,7 +1,0 @@
-#!/usr/bin/env bash
-
-docker rm -f mmpg_engine_test
-docker build -t mmpg/engine:test .
-docker run --privileged -d --name=mmpg_engine_test -v $(pwd)/src:/engine/src \
-  mmpg/engine:test
-docker kill mmpg_engine_test
