@@ -10,6 +10,9 @@ class World {
   void Lock();
   void Unlock();
 
+  virtual void Update(float delta) = 0;
+  virtual unsigned int updates_per_second() const;
+
   virtual void Print(std::ostream& stream) = 0;
   virtual void PrintJSON(std::ostream& stream) = 0;
 

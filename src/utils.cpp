@@ -148,11 +148,19 @@ std::string uuid() {
   return std::string(uuid);
 }
 
-long int time() {
-  struct timeval tp;
-  gettimeofday(&tp, NULL);
+float time() {
+  return time_us() / 1000000.f;
+}
 
-  return tp.tv_sec * 1000 + tp.tv_usec / 1000;
+float time_ms() {
+  return time_us() / 1000.f;
+}
+
+long unsigned int time_us() {
+  timespec time;
+  clock_gettime(CLOCK_MONOTONIC, &time);
+
+  return static_cast<long unsigned int>(time.tv_sec) * 1000000 + time.tv_nsec / 1000;
 }
 
 void Send(zmq::socket_t& socket, const std::string& msg) {

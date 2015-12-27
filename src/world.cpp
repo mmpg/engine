@@ -10,4 +10,8 @@ void World::Unlock() {
   mutex_.unlock();
 }
 
+unsigned int World::updates_per_second() const {
+  return 5;
+}
+
 }

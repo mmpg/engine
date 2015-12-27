@@ -4,6 +4,7 @@
 #include "api.hpp"
 #include "server.hpp"
 #include "../utils.hpp"
+#include "../debug.hpp"
 
 namespace mmpg {
 namespace master {
@@ -16,6 +17,49 @@ void run_api(Api& api, Worker& worker, Log& log) {
 
 void run_server(Server& server, Worker& worker, Game& game, World& world, Notifier& notifier, Log& log) {
   server.Run(worker, game, world, notifier, log);
+}
+
+void run_game_loop(World& world, Notifier& notifier, Log& log) {
+  unsigned int updates_per_second = world.updates_per_second();
+  unsigned int update_in_second = 0;
+  float update_interval = 1.f / updates_per_second;
+  float accum = 0.f;
+  float last_tick = utils::time();
+
+  while(true) {
+    float current_tick = utils::time();
+    accum += current_tick - last_tick;
+    last_tick = current_tick;
+
+    while(accum >= update_interval) {
+      world.Lock();
+
+      world.Update(update_interval);
+
+      if(update_in_second == updates_per_second) {
+        // Sync every second
+        log.Flush();
+
+        std::ostringstream stream;
+        world.PrintJSON(stream);
+
+        std::string notification = std::to_string(utils::time_ms()) + " SYNC " + stream.str();
+        notifier.Notify(notification);
+
+        log.Add(notification);
+
+        update_in_second = 0;
+      } else {
+        update_in_second++;
+      }
+
+      world.Unlock();
+
+      accum -= update_interval;
+    }
+
+    std::this_thread::sleep_for(std::chrono::duration<float, std::ratio<1,1>>(update_interval - accum));
+  }
 }
 
 }
@@ -63,25 +107,8 @@ void Process::Run(Game& game) {
   // Run players
   worker.Run();
 
-  // Client synchronization
-  while(true) {
-    world->Lock();
-
-    log.Flush();
-
-    std::ostringstream stream;
-    world->PrintJSON(stream);
-
-    std::string notification = std::to_string(utils::time()) + " SYNC " + stream.str();
-    notifier.Notify(notification);
-
-    log.Add(notification);
-
-    world->Unlock();
-
-    // Every second
-    std::this_thread::sleep_for(std::chrono::seconds(1));
-  }
+  // Run game loop
+  run_game_loop(*world, notifier, log);
 }
 
 }
