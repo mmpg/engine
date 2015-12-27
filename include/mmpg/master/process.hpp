@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../world.hpp"
+#include "../game.hpp"
 
 namespace mmpg {
 namespace master {
@@ -9,7 +9,7 @@ class Process {
  public:
   Process();
 
-  void Run(World& world);
+  void Run(Game& game);
 };
 
 }

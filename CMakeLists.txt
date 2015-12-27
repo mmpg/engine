@@ -21,6 +21,7 @@ set(SOURCE_FILES
         src/base64.cpp
         src/debug.cpp
         src/log.cpp
+        src/game.cpp
         src/world.cpp
         src/action.cpp
 )

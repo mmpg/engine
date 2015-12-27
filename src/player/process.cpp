@@ -1,9 +1,8 @@
-#include <player/process.hpp>
-#include <player/ai.hpp>
 #include <sys/prctl.h>
 #include <signal.h>
 #include <sstream>
 #include <thread>
+#include "player/process.hpp"
 #include "../utils.hpp"
 
 namespace mmpg {
@@ -18,7 +17,7 @@ Process::Process(int argc, char* argv[]) {
   run_ = true;
 }
 
-void Process::Run(World& world) {
+void Process::Run(Game& game) {
   // Kill when parent dies
   prctl(PR_SET_PDEATHSIG, SIGKILL);
 
@@ -34,7 +33,7 @@ void Process::Run(World& world) {
   }
 
   // TODO: Set AI world
-  (void)world;
+  (void)game;
 
   while(run_) {
     Action* action = ai->play();

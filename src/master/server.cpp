@@ -12,7 +12,7 @@ Server::Server(zmq::context_t& context, unsigned int port) : socket_(context, ZM
 }
 
 
-void Server::Run(Worker& worker, World& world, Notifier& notifier, Log& log) {
+void Server::Run(Worker& worker, Game& game, World& world, Notifier& notifier, Log& log) {
   while(true) {
     zmq::message_t request;
     socket_.recv(&request);
@@ -28,7 +28,7 @@ void Server::Run(Worker& worker, World& world, Notifier& notifier, Log& log) {
     if(worker.has_player_with_key(key)) {
       // Player exists
       unsigned int player_id = worker.player_id(key);
-      Action* action = world.ParseAction(msg);
+      Action* action = game.ReadAction(msg);
 
       if(action == 0) {
         debug::Println("SERVER", "Invalid action received");

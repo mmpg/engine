@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../world.hpp"
+#include "../game.hpp"
 #include "ai.hpp"
 
 namespace mmpg {
@@ -10,7 +10,7 @@ class Process {
  public:
   Process(int argc, char* argv[]);
 
-  void Run(World& world);
+  void Run(Game& game);
 
  private:
   std::string id_;
