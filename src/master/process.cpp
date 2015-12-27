@@ -24,10 +24,10 @@ void run_game_loop(World& world, Notifier& notifier, Log& log) {
   unsigned int update_in_second = 0;
   float update_interval = 1.f / updates_per_second;
   float accum = 0.f;
-  float last_tick = utils::time();
+  float last_tick = utils::clock_time();
 
   while(true) {
-    float current_tick = utils::time();
+    float current_tick = utils::clock_time();
     accum += current_tick - last_tick;
     last_tick = current_tick;
 

@@ -148,15 +148,18 @@ std::string uuid() {
   return std::string(uuid);
 }
 
-float time() {
-  return time_us() / 1000000.f;
-}
-
 long unsigned int time_ms() {
-  return time_us() / 1000;
+  timeval tp;
+  gettimeofday(&tp, NULL);
+
+  return static_cast<long unsigned int>(tp.tv_sec) * 1000 + tp.tv_usec / 1000;
 }
 
-long unsigned int time_us() {
+float clock_time() {
+  return clock_time_us() / 1000000.f;
+}
+
+long unsigned int clock_time_us() {
   timespec time;
   clock_gettime(CLOCK_MONOTONIC, &time);
 
