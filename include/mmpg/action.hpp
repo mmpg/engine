@@ -1,24 +1,17 @@
 #pragma once
 
-#include <istream>
+#include <ostream>
+#include "world.hpp"
 
 namespace mmpg {
 
 class Action {
  public:
-  Action(std::string type);
   virtual ~Action();
 
-  const std::string& type() const;
   virtual std::string str() const = 0;
-
-  void PrintJSON(std::ostream& stream) const;
-
- protected:
-  virtual void end_json(std::ostream& stream) const;
-
- private:
-  std::string type_;
+  virtual void PrintJSON(std::ostream& stream) const = 0;
+  virtual void Perform(int player_id, World& world) const = 0;
 };
 
 }

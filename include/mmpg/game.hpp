@@ -1,6 +1,7 @@
 #pragma once
 
 #include "world.hpp"
+#include "action.hpp"
 
 namespace mmpg {
 

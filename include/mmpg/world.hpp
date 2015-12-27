@@ -2,7 +2,6 @@
 
 #include <mutex>
 #include <vector>
-#include "action.hpp"
 
 namespace mmpg {
 
@@ -11,7 +10,6 @@ class World {
   void Lock();
   void Unlock();
 
-  virtual void Update(int player, const Action& action) = 0;
   virtual void Print(std::ostream& stream) = 0;
   virtual void PrintJSON(std::ostream& stream) = 0;
 

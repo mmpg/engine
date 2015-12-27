@@ -33,11 +33,11 @@ void Server::Run(Worker& worker, Game& game, World& world, Notifier& notifier, L
       if(action == 0) {
         debug::Println("SERVER", "Invalid action received");
       } else {
-        // Lock the world, so no one can read while updating it
+        // Lock the world, so no one can touch it while updating it
         world.Lock();
 
         // Perform action
-        world.Update(player_id, *action);
+        action->Perform(player_id, world);
 
         // Notify action
         std::ostringstream action_json;
