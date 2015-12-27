@@ -152,8 +152,8 @@ float time() {
   return time_us() / 1000000.f;
 }
 
-float time_ms() {
-  return time_us() / 1000.f;
+long unsigned int time_ms() {
+  return time_us() / 1000;
 }
 
 long unsigned int time_us() {

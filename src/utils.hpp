@@ -41,7 +41,7 @@ void Stop(pid_t pid, int timeout);
 std::string uuid();
 
 float time();
-float time_ms();
+long unsigned int time_ms();
 long unsigned int time_us();
 
 void Send(zmq::socket_t& socket, const std::string& msg);
