@@ -15,6 +15,7 @@ class AI {
   virtual ~AI();
 
   void Init(int player_id, Game* game, Master* master);
+  void ChangeAction(Action* new_action);
   void ClearAction();
 
   int me() const;

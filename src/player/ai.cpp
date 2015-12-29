@@ -22,6 +22,11 @@ void AI::Init(int player_id, Game* game, Master* master) {
   master_ = master;
 }
 
+void AI::ChangeAction(Action* new_action) {
+  ClearAction();
+  action_ = new_action;
+}
+
 void AI::ClearAction() {
   if(action_ != 0) {
     delete action_;
