@@ -10,7 +10,7 @@ class Process {
  public:
   Process(int argc, char* argv[]);
 
-  void Run(const Game& game);
+  void Run(Game& game);
 
  private:
   std::string key_;

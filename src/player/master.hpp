@@ -9,6 +9,7 @@ class Master {
  public:
   Master(const std::string& key_, zmq::context_t& context, const std::string& host, unsigned int port);
 
+  std::string ReadWorld();
   void Send(Action* action);
 
  private:

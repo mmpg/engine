@@ -10,7 +10,7 @@ class Game {
   virtual World* GenerateWorld() = 0;
   virtual World* ReadWorld(std::istream& stream) = 0;
 
-  virtual Action* ReadAction(std::istream& stream) = 0;
+  virtual Action* ReadAction(char type, std::istream& stream) = 0;
 };
 
 }

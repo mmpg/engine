@@ -1,5 +1,6 @@
 #include <player/ai.hpp>
 #include "master.hpp"
+#include <sstream>
 
 namespace mmpg {
 
@@ -11,15 +12,11 @@ int AI::Register(AI* ai) {
   return 0;
 }
 
-AI::AI() : me_(-1), game_(0), master_(0), action_(0) {
-
-}
-
 AI::~AI() {
   ClearAction();
 }
 
-void AI::Init(int player_id, const Game* game, Master* master) {
+void AI::Init(int player_id, Game* game, Master* master) {
   me_ = player_id;
   game_ = game;
   master_ = master;
@@ -40,13 +37,9 @@ Action* AI::action() const {
   return action_;
 }
 
-void AI::load() {
-  // Do nothing
-}
-
-
-void AI::save() {
-  // Do nothing
+World* AI::read_world() {
+  std::istringstream world_state(master_->ReadWorld());
+  return game_->ReadWorld(world_state);
 }
 
 }

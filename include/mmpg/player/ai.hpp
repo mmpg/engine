@@ -12,25 +12,25 @@ class AI {
   static AI* main;
   static int Register(AI* ai);
 
-  AI();
   virtual ~AI();
 
-  void Init(int player_id, const Game* game, Master* master);
+  void Init(int player_id, Game* game, Master* master);
   void ClearAction();
 
   int me() const;
   Action* action() const;
 
-  virtual void play() = 0;
+  virtual void Play() = 0;
+  virtual void RefreshWorld() = 0;
 
-  virtual void load();
-  virtual void save();
+ protected:
+  World* read_world();
 
  private:
-  int me_;
-  const Game* game_;
-  Master* master_;
-  Action* action_;
+  int me_ = -1;
+  Game* game_ = 0;
+  Master* master_ = 0;
+  Action* action_ = 0;
 };
 
 #define RegisterAI(x) static const int __x__ = mmpg::AI::Register(new x());

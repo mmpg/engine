@@ -99,6 +99,13 @@ void Process::Run(Game& game) {
     log.Clear();
   }
 
+  // Print current world
+  std::ostringstream stream;
+  world->Print(stream);
+
+  debug::Println("MASTER", "Current world:");
+  debug::Print(stream.str());
+
   // Start servers
   std::thread api_thread(run_api, std::ref(api), std::ref(worker), std::ref(log));
   std::thread server_thread(run_server, std::ref(server), std::ref(worker), std::ref(game), std::ref(*world),

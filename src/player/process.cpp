@@ -20,7 +20,7 @@ Process::Process(int argc, char* argv[]) {
   run_ = true;
 }
 
-void Process::Run(const Game& game) {
+void Process::Run(Game& game) {
   // Kill when parent dies
   prctl(PR_SET_PDEATHSIG, SIGKILL);
 
@@ -36,19 +36,17 @@ void Process::Run(const Game& game) {
   Master master(key_, zcontext, "127.0.0.1", 5557);
 
   ai->Init(id_, &game, &master);
+  ai->RefreshWorld();
 
   while(run_) {
-    ai->play();
+    ai->Play();
 
     Action* action = ai->action();
 
-    if(action == 0) {
-      continue;
+    if(action != 0) {
+      master.Send(action);
+      ai->ClearAction();
     }
-
-    master.Send(action);
-
-    ai->ClearAction();
 
     std::this_thread::sleep_for(std::chrono::milliseconds(33));
   }

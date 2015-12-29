@@ -25,42 +25,49 @@ void Server::Run(Worker& worker, Game& game, World& world, Notifier& notifier, L
     std::string key;
     msg >> key;
 
-    if(worker.has_player_with_key(key)) {
-      // Player exists
-      unsigned int player_id = worker.player_id(key);
-      Action* action = game.ReadAction(msg);
-
-      if(action == 0) {
-        debug::Println("SERVER", "Invalid action received");
-      } else {
-        // Lock the world, so no one can touch it while updating it
-        world.Lock();
-
-        // Perform action
-        action->Perform(player_id, world);
-
-        // Notify action
-        std::ostringstream action_json;
-        action->PrintJSON(action_json);
-        std::string notification = std::to_string(utils::time_ms()) + " ACTION " + std::to_string(player_id) + " " + action_json.str();
-
-        notifier.Notify(notification);
-        log.Add(notification);
-
-        // Unlock the world
-        world.Unlock();
-
-        delete action;
-      }
-
-      // Reply with the current game world
-      std::ostringstream world_serialized;
-      world.Print(world_serialized);
-
-      socket_.send(world_serialized.str().c_str(), world_serialized.str().length());
-    } else {
+    if(!worker.has_player_with_key(key)) {
       socket_.send("400", 3);
+      continue;
     }
+
+    char type;
+    msg >> type;
+
+    if(type == 'W') {
+      std::ostringstream stream;
+      world.Print(stream);
+
+      utils::Send(socket_, stream.str());
+      continue;
+    }
+
+    unsigned int player_id = worker.player_id(key);
+    Action* action = game.ReadAction(type, msg);
+
+    if(action == 0) {
+      debug::Println("SERVER", "Invalid action received");
+    } else {
+      // Lock the world, so no one can touch it while updating it
+      world.Lock();
+
+      // Perform action
+      action->Perform(player_id, world);
+
+      // Notify action
+      std::ostringstream action_json;
+      action->PrintJSON(action_json);
+      std::string notification = std::to_string(utils::time_ms()) + " ACTION " + std::to_string(player_id) + " " + action_json.str();
+
+      notifier.Notify(notification);
+      log.Add(notification);
+
+      // Unlock the world
+      world.Unlock();
+
+      delete action;
+    }
+
+    socket_.send("OK", 2);
   }
 }
 

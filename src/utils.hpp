@@ -33,6 +33,7 @@ bool RenameFile(const std::string& current_name, const std::string& new_name);
 int Open(const std::string& path, int mode);
 int OpenForRead(const std::string& path);
 int OpenForWrite(const std::string& path);
+void RedirectOutputToFile(const std::string& path);
 
 pid_t Fork();
 bool IsAlive(pid_t pid);

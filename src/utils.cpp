@@ -81,7 +81,7 @@ bool System(const std::string& cmd) {
 }
 
 int Open(const std::string& path, int mode) {
-  int fd = open(path.c_str(), mode);
+  int fd = open(path.c_str(), mode, S_IRUSR | S_IWUSR);
 
   if(fd < 0) {
     myerr("error at open");
@@ -95,7 +95,16 @@ int OpenForRead(const std::string& path) {
 }
 
 int OpenForWrite(const std::string& path) {
-  return Open(path, O_WRONLY);
+  return Open(path, O_WRONLY | O_CREAT | O_TRUNC);
+}
+
+void RedirectOutputToFile(const std::string& path) {
+  int fd = OpenForWrite(path);
+
+  dup2(fd, 1);
+  dup2(fd, 2);
+
+  close(fd);
 }
 
 std::string ReadFile(const std::string& path) {
