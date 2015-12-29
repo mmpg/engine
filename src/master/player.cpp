@@ -26,7 +26,7 @@ void Player::Start() {
 
   if(pid_ == 0) {
     utils::Chdir(path());
-    utils::Exec("player", {"player", key_});
+    utils::Exec("player", {"player", key_, std::to_string(id_)});
   }
 }
 

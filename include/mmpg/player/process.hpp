@@ -10,10 +10,11 @@ class Process {
  public:
   Process(int argc, char* argv[]);
 
-  void Run(Game& game);
+  void Run(const Game& game);
 
  private:
-  std::string id_;
+  std::string key_;
+  int id_;
   bool run_;
 };
 

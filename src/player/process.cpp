@@ -4,27 +4,25 @@
 #include <thread>
 #include "player/process.hpp"
 #include "../utils.hpp"
+#include "master.hpp"
 
 namespace mmpg {
 namespace player {
 
 Process::Process(int argc, char* argv[]) {
-  if(argc < 2) {
-    throw "Player ID not provided";
+  if(argc < 3) {
+    // TODO: Usage help
+    throw "Not enough arguments";
   }
 
-  id_ = argv[1];
+  key_ = argv[1];
+  id_ = atoi(argv[2]);
   run_ = true;
 }
 
-void Process::Run(Game& game) {
+void Process::Run(const Game& game) {
   // Kill when parent dies
   prctl(PR_SET_PDEATHSIG, SIGKILL);
-
-  zmq::context_t zcontext(1);
-  zmq::socket_t server(zcontext, ZMQ_REQ);
-
-  server.connect("tcp://127.0.0.1:5557");
 
   AI* ai = AI::main;
 
@@ -32,28 +30,25 @@ void Process::Run(Game& game) {
     throw "AI not registered";
   }
 
-  // TODO: Set AI world
-  (void)game;
+  zmq::context_t zcontext(1);
+
+  // TODO: Master address should be retrieved from argv
+  Master master(key_, zcontext, "127.0.0.1", 5557);
+
+  ai->Init(id_, &game, &master);
 
   while(run_) {
-    Action* action = ai->play();
+    ai->play();
+
+    Action* action = ai->action();
 
     if(action == 0) {
       continue;
     }
 
-    std::string msg = id_ + " " + action->str();
-    server.send(msg.c_str(), msg.length());
+    master.Send(action);
 
-    delete action;
-
-    zmq::message_t reply;
-    server.recv(&reply);
-
-    std::string world_state = std::string((const char*)reply.data(), reply.size());
-    std::istringstream world_stream(world_state);
-
-    // TODO: Update AI world
+    ai->ClearAction();
 
     std::this_thread::sleep_for(std::chrono::milliseconds(33));
   }

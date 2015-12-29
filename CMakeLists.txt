@@ -40,6 +40,7 @@ set(MMPG_MASTER_SOURCE_FILES
 set(MMPG_PLAYER_SOURCE_FILES
         src/player/process.cpp
         src/player/ai.cpp
+        src/player/master.cpp
         ${SOURCE_FILES}
 )
 
