@@ -48,7 +48,8 @@ void Process::Run(Game& game) {
       ai->ClearAction();
     }
 
-    std::this_thread::sleep_for(std::chrono::milliseconds(33));
+    // TODO: Make this configurable by the game
+    std::this_thread::sleep_for(std::chrono::milliseconds(200));
   }
 }
 
