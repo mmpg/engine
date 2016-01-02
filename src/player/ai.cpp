@@ -42,9 +42,9 @@ Action* AI::action() const {
   return action_;
 }
 
-World* AI::read_world() {
-  std::istringstream world_state(master_->ReadWorld());
-  return game_->ReadWorld(world_state);
+void AI::RefreshWorld(World* world) {
+  std::istringstream world_data(master_->WorldData());
+  world->ReadData(world_data);
 }
 
 }

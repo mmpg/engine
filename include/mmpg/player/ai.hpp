@@ -15,6 +15,8 @@ class AI {
   virtual ~AI();
 
   void Init(int player_id, Game* game, Master* master);
+  void RefreshWorld(World* world);
+
   void ChangeAction(Action* new_action);
   void ClearAction();
 
@@ -22,10 +24,9 @@ class AI {
   Action* action() const;
 
   virtual void Play() = 0;
-  virtual void RefreshWorld() = 0;
 
  protected:
-  World* read_world();
+  virtual void world(World* world) = 0;
 
  private:
   int me_ = -1;

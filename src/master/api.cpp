@@ -8,17 +8,25 @@ namespace mmpg {
 
 namespace {
 
-const int CODE_FETCH_LOG = 0;
-const int CODE_PLAYER_EXISTS = 1;
-const int CODE_DEPLOY_PLAYER = 2;
+enum REQUESTS { FETCH_WORLD, FETCH_LOG, PLAYER_EXISTS, DEPLOY_PLAYER };
 
 void InvalidAttribute(zmq::socket_t& response, std::string attr) {
   utils::Send(response, "ERROR|Invalid attribute value for: " + attr);
 }
 
-void UnknownRequest(std::istream& request, zmq::socket_t& response) {
-  (void) request;
+void UnknownRequest(zmq::socket_t& response) {
   utils::Send(response, "ERROR|Unknown request");
+}
+
+void FetchWorld(zmq::socket_t& response, const World& world, std::string& cache) {
+  if(cache == "") {
+    std::ostringstream world_structure;
+    world.PrintStructure(world_structure);
+
+    cache = world_structure.str();
+  }
+
+  utils::Send(response, cache);
 }
 
 void FetchLog(std::istream& request, zmq::socket_t& response, const Log& world_log) {
@@ -69,9 +77,10 @@ void DeployPlayer(std::istream& request, zmq::socket_t& response, Worker& worker
 Api::Api(zmq::context_t &context, unsigned int port) :
     socket_(context, ZMQ_REP),
     handlers_({
-                  {"LOG", CODE_FETCH_LOG},
-                  {"PLAYER_EXISTS", CODE_PLAYER_EXISTS},
-                  {"DEPLOY_PLAYER", CODE_DEPLOY_PLAYER}
+                  {"WORLD", FETCH_WORLD},
+                  {"LOG", FETCH_LOG},
+                  {"PLAYER_EXISTS", PLAYER_EXISTS},
+                  {"DEPLOY_PLAYER", DEPLOY_PLAYER}
               })
 {
   socket_.bind("tcp://*:" + std::to_string(port));
@@ -79,7 +88,9 @@ Api::Api(zmq::context_t &context, unsigned int port) :
   debug::Println("API", "Listening to 0.0.0.0:" + std::to_string(port) + "...");
 }
 
-void Api::Run(Worker& worker, const Log& world_log) {
+void Api::Run(Worker& worker, const World& world, const Log& world_log) {
+  std::string cached_world = "";
+
   while(true) {
     zmq::message_t request;
     socket_.recv(&request);
@@ -95,25 +106,29 @@ void Api::Run(Worker& worker, const Log& world_log) {
       auto code = handlers_.find(type);
 
       if(code == handlers_.end()) {
-        UnknownRequest(request_stream, socket_);
+        UnknownRequest(socket_);
         continue;
       }
 
       switch(code->second) {
-        case CODE_FETCH_LOG:
+        case FETCH_WORLD:
+          FetchWorld(socket_, world, cached_world);
+          break;
+
+        case FETCH_LOG:
           FetchLog(request_stream, socket_, world_log);
           break;
 
-        case CODE_PLAYER_EXISTS:
+        case PLAYER_EXISTS:
           PlayerExists(request_stream, socket_, worker);
           break;
 
-        case CODE_DEPLOY_PLAYER:
+        case DEPLOY_PLAYER:
           DeployPlayer(request_stream, socket_, worker);
           break;
 
         default:
-          UnknownRequest(request_stream, socket_);
+          UnknownRequest(socket_);
       }
     }
   }

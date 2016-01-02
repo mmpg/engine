@@ -18,7 +18,7 @@ void Master::Send(Action* action) {
   socket_.recv(&reply);
 }
 
-std::string Master::ReadWorld() {
+std::string Master::WorldData() {
   std::string msg = key_ + " W";
   socket_.send(msg.c_str(), msg.length());
 
@@ -27,4 +27,5 @@ std::string Master::ReadWorld() {
 
   return std::string((const char*)reply.data(), reply.size());
 }
+
 }
