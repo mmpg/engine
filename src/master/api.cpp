@@ -21,7 +21,7 @@ void UnknownRequest(zmq::socket_t& response) {
 void FetchWorld(zmq::socket_t& response, const World& world, std::string& cache) {
   if(cache == "") {
     std::ostringstream world_structure;
-    world.PrintStructure(world_structure);
+    world.PrintViewerStructure(world_structure);
 
     cache = world_structure.str();
   }
