@@ -14,9 +14,9 @@ class World {
   virtual unsigned int updates_per_second() const;
 
   virtual void PrintStructure(std::ostream& stream) const = 0;
-  virtual void PrintViewerStructure() const = 0;
+  virtual void PrintViewerStructure(std::ostream& stream) const = 0;
 
-  virtual void ReadData(std::istream& stream) const = 0;
+  virtual void ReadData(std::istream& stream) = 0;
   virtual void PrintData(std::ostream& stream) const = 0;
   virtual void PrintViewerData(std::ostream& stream) const = 0;
 
