@@ -20,6 +20,12 @@ void AI::Init(int player_id, Game* game, Master* master) {
   me_ = player_id;
   game_ = game;
   master_ = master;
+
+  MessageBuffer buffer;
+  master->ReadWorldStructure(buffer);
+
+  std::istream world_structure(&buffer);
+  world(game->ReadWorld(world_structure));
 }
 
 void AI::ChangeAction(Action* new_action) {
@@ -43,7 +49,10 @@ Action* AI::action() const {
 }
 
 void AI::RefreshWorld(World* world) {
-  std::istringstream world_data(master_->WorldData());
+  MessageBuffer buffer;
+  master_->WorldData(buffer);
+
+  std::istream world_data(&buffer);
   world->ReadData(world_data);
 }
 

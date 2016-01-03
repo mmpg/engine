@@ -36,7 +36,6 @@ void Process::Run(Game& game) {
   Master master(key_, zcontext, "127.0.0.1", 5557);
 
   ai->Init(id_, &game, &master);
-  ai->RefreshWorld();
 
   while(run_) {
     ai->Play();

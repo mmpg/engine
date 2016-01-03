@@ -5,6 +5,17 @@
 
 namespace mmpg {
 
+namespace {
+
+std::string ReadStructure(const World& world) {
+  std::ostringstream world_structure;
+  world.PrintStructure(world_structure);
+
+  return world_structure.str();
+}
+
+}
+
 Server::Server(zmq::context_t& context, unsigned int port) : socket_(context, ZMQ_REP) {
   socket_.bind("tcp://*:" + std::to_string(port));
 
@@ -13,6 +24,8 @@ Server::Server(zmq::context_t& context, unsigned int port) : socket_(context, ZM
 
 
 void Server::Run(Worker& worker, Game& game, World& world, Notifier& notifier, Log& log) {
+  std::string world_structure = ReadStructure(world);
+
   while(true) {
     zmq::message_t request;
     socket_.recv(&request);
@@ -33,11 +46,16 @@ void Server::Run(Worker& worker, Game& game, World& world, Notifier& notifier, L
     char type;
     msg >> type;
 
-    if(type == 'W') {
-      std::ostringstream stream;
-      world.Print(stream);
+    if(type == 'S') {
+      utils::Send(socket_, world_structure);
+      continue;
+    }
 
-      utils::Send(socket_, stream.str());
+    if(type == 'W') {
+      std::ostringstream world_data;
+      world.PrintData(world_data);
+
+      utils::Send(socket_, world_data.str());
       continue;
     }
 

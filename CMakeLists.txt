@@ -24,6 +24,7 @@ set(SOURCE_FILES
         src/game.cpp
         src/world.cpp
         src/action.cpp
+        src/message_buffer.cpp
 )
 
 # Master

@@ -18,14 +18,20 @@ void Master::Send(Action* action) {
   socket_.recv(&reply);
 }
 
-std::string Master::WorldData() {
-  std::string msg = key_ + " W";
+void Master::ReadWorldStructure(MessageBuffer& buffer) {
+  Request('S', buffer);
+}
+
+void Master::WorldData(MessageBuffer& buffer) {
+  Request('W', buffer);
+}
+
+void Master::Request(char type, MessageBuffer& buffer) {
+  std::string msg = key_ + " " + type;
   socket_.send(msg.c_str(), msg.length());
 
-  zmq::message_t reply;
-  socket_.recv(&reply);
-
-  return std::string((const char*)reply.data(), reply.size());
+  socket_.recv(&buffer.message);
+  buffer.Ready();
 }
 
 }

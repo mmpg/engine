@@ -11,8 +11,8 @@ namespace master {
 
 namespace {
 
-void run_api(Api& api, Worker& worker, Log& log) {
-  api.Run(worker, log);
+void run_api(Api& api, Worker& worker, World& world, Log& log) {
+  api.Run(worker, world, log);
 }
 
 void run_server(Server& server, Worker& worker, Game& game, World& world, Notifier& notifier, Log& log) {
@@ -41,7 +41,7 @@ void run_game_loop(World& world, Notifier& notifier, Log& log) {
         log.Flush();
 
         std::ostringstream stream;
-        world.PrintJSON(stream);
+        world.PrintViewerData(stream);
 
         std::string notification = std::to_string(utils::time_ms()) + " SYNC " + stream.str();
         notifier.Notify(notification);
@@ -101,13 +101,13 @@ void Process::Run(Game& game) {
 
   // Print current world
   std::ostringstream stream;
-  world->Print(stream);
+  world->PrintStructure(stream);
 
   debug::Println("MASTER", "Current world:");
   debug::Print(stream.str());
 
   // Start servers
-  std::thread api_thread(run_api, std::ref(api), std::ref(worker), std::ref(log));
+  std::thread api_thread(run_api, std::ref(api), std::ref(worker), std::ref(*world), std::ref(log));
   std::thread server_thread(run_server, std::ref(server), std::ref(worker), std::ref(game), std::ref(*world),
                             std::ref(notifier), std::ref(log));
 
